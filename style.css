@@ -1,0 +1,109 @@
+body{
+    min-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+main{
+    display: flex;
+    flex: 1;
+    background-color: #77ff77;
+    padding: 1rem;
+}
+
+
+.SUCCESS {
+    background-color: #77ff77;
+    color: #007700;
+    padding: 1rem;
+    
+}
+.ERROR {
+    background-color: #ff7777;
+    color: #770000;
+    padding: 1rem;
+    
+}
+.WARNING {
+    background-color: #ffff77;
+    color: #777700;
+    padding: 1rem;
+    
+}
+.INFO {
+    background-color: #7777ff;
+    color: #000077;
+    padding: 1rem;
+    
+}
+
+
+.user-head-row .th{
+    color: #ffffff;
+    background-color: #00ff00;
+}
+
+.users{
+    font-size: 0.7rem;
+       
+}
+.user-head-row{
+    background-color: #0000ff;
+    padding: 0px 1px 2px 1px;
+    
+}
+.user-row{
+    background-color: #000000;
+    padding: 0px 1px 1px 1px;
+}
+.user-row .th{
+    color: #ffffff;
+    text-align: right;
+}
+.user-row>div{
+    padding: 2px 1px 2px 1px;
+}
+.user-head-row>div{
+    padding: 2px 1px 0px 1px; 
+}
+
+@media (max-width: 767px) {
+    .user-row:nth-child(odd) .td{
+        background-color: #cccccc;
+    }
+}
+.user-row:nth-child(even) .td{
+    background-color: #cccccc;
+}
+@media (min-width: 768px) {
+    .user-row:nth-child(odd) .td{
+        background-color: #ffffff;
+    }
+    .user-row:hover .td{
+        background-color: #222222;
+        color: #ffffff;
+    }
+    
+              
+}
+.user-row:active{
+    background-color: #222222;
+    color: #ffffff;
+}
+
+.td, .th {
+       
+    display: block;
+    padding: 0.2rem;
+    
+    height: 100%;
+    
+}
+
+.th{
+    
+    background-color: #ffffff;
+    /* background-color: #212529; */
+    color: #ffffff;
+    text-align: center;
+}

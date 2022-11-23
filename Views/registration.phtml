@@ -1,0 +1,139 @@
+
+<div class="container mx-auto">
+    <h1>Registrace</h1>
+
+    <form method="POST" class="row g-3" novalidate="novalidate">
+        <div class="form-floating col-md-6 col-12">
+            <input type="text" name="first_name" id="first_name" placeholder="Křestní jméno" class="form-control is-<?=$form_messages["first_name"]["type"]?>" value="<?=$_POST["first_name"]?>">
+            <label for="first_name" class="form-label">Křestní jméno:</label>
+            <div class="<?=$form_messages["first_name"]["type"]?>-feedback">
+                <?=$form_messages["first_name"]["text"]?>
+            </div>
+        </div>
+        <div class="form-floating col-md-6 col-12">
+            <input type="text" name="last_name" id="last_name" class="form-control is-<?=$form_messages["last_name"]["type"]?>" placeholder="Příjmení:" value="<?=$_POST["last_name"]?>">
+            <label for="last_name" class="form-label">Příjmení:</label>
+            <div class="<?=$form_messages["last_name"]["type"]?>-feedback">
+            <?=$form_messages["last_name"]["text"]?>
+            </div>
+        </div>
+        <div class="form-floating col-md-4 col-12">
+            <input type="date" name="date_of_birth" id="date_of_birth" class="form-control is-<?=$form_messages["date_of_birth"]["type"]?>" placeholder="Datum narození:" value="<?=$_POST["date_of_birth"]?>">
+            <label for="date_of_birth" class="form-label">Datum narození:</label>
+            <div class="<?=$form_messages["date_of_birth"]["type"]?>-feedback">
+            <?=$form_messages["date_of_birth"]["text"]?>
+            </div>
+        </div>
+        
+        <div class="form-floating col-md-4 col-12">
+            <div class="input-group">
+                <span class="input-group-text">+420</span>
+                <div class="form-floating">
+                    <input type="tel" name="phone" id="phone" class="form-control is-<?=$form_messages["phone"]["type"]?>" placeholder="Telefonní číslo:" value="<?=$_POST["phone"]?>">
+                    <label for="phone" class="form-label">Telefonní číslo:</label>
+                </div>
+            </div>
+            <div class="<?=$form_messages["phone"]["type"]?>-feedback">
+                <?=$form_messages["phone"]["text"]?>
+            </div>
+        </div>
+        <div class="form-floating col-md-4 col-12">
+            <input type="email" name="mail" id="mail" class="form-control is-<?=$form_messages["mail"]["type"]?>" placeholder="E-mail:" value="<?=$_POST["mail"]?>">
+            <label for="mail" class="form-label">E-mail:</label>
+            <div class="<?=$form_messages["mail"]["type"]?>-feedback">
+                <?=$form_messages["mail"]["text"]?>
+            </div>
+        </div>
+        <div class="form-floating col-md-6 col-12">
+            <input type="text" name="national_id_number" id="national_id_number" class="form-control is-<?=$form_messages["national_id_number"]["type"]?>" placeholder="Rodné číslo:" value="<?=$_POST["national_id_number"]?>">
+            <label for="national_id_number" class="form-label">Rodné číslo:</label>
+            <div class="<?=$form_messages["street"]["type"]?>-feedback">
+            <?=$form_messages["national_id_number"]["text"]?>
+            </div>
+        </div>
+        <div class="form-floating col-md-6 col-12">
+            <input type="text" name="identity_card_number" id="identity_card_number" class="form-control is-<?=$form_messages["identity_card_number"]["type"]?>" placeholder="Číslo občansého průkazu:" value="<?=$_POST["identity_card_number"]?>">
+            <label for="identity_card_number" class="form-label">Číslo občanského průkazu:</label>
+            <div class="<?=$form_messages["identity_card_number"]["type"]?>-feedback">
+            <?=$form_messages["identity_card_number"]["text"]?>
+            </div>
+        </div>
+        <div class="form-floating col-md-6 col-12">
+            <input type="text" name="street" id="street" class="form-control is-<?=$form_messages["street"]["type"]?>" placeholder="Ulice:" value="<?=$_POST["street"]?>">
+            <label for="street" class="form-label">Ulice:</label>
+            <div class="<?=$form_messages["street"]["type"]?>-feedback">
+            <?=$form_messages["street"]["text"]?>
+            </div>
+        </div>
+        <div class="form-floating col-md-4 col-6">
+            <input type="number" name="building_identification_number" id="building_identification_number" class="form-control is-<?=$form_messages["building_identification_number"]["type"]?>" placeholder="Číslo popisné:" value="<?=$_POST["building_identification_number"]?>">
+            <label for="building_identification_number" class="form-label">Číslo popisné:</label>
+            <div class="<?=$form_messages["building_identification_number"]["type"]?>-feedback">
+                <?=$form_messages["building_identification_number"]["text"]?>
+            </div>
+        </div>
+        <div class="form-floating col-md-2 col-6">
+            <input type="text" name="house_number" id="house_number" class="form-control is-<?=$form_messages["house_number"]["type"]?>" placeholder="Číslo orientační:" value="<?=$_POST["house_number"]?>">
+            <label for="house_number" class="form-label">Číslo orientační:</label>
+            <div class="<?=$form_messages["house_number"]["type"]?>-feedback">
+                <?=$form_messages["house_number"]["text"]?>
+            </div>
+        </div>
+        <div class="form-floating col-md-8 col-12">
+            <input type="text" name="city" id="city" class="form-control is-<?=$form_messages["city"]["type"]?>" placeholder="Město:" value="<?=$_POST["city"]?>">
+            <label for="city" class="form-label">Město:</label>
+            <div class="<?=$form_messages["city"]["type"]?>-feedback">
+                <?=$form_messages["city"]["text"]?>
+            </div>
+        </div>
+        <div class="form-floating col-md-4 col-12">
+            <input type="number" name="ZIP" id="ZIP" class="form-control is-<?=$form_messages["ZIP"]["type"]?>" placeholder="PSČ:" value="<?=$_POST["ZIP"]?>">
+            <label for="ZIP" class="form-label">PSČ:</label>
+            <div class="<?=$form_messages["ZIP"]["type"]?>-feedback">
+                <?=$form_messages["ZIP"]["text"]?>
+            </div>
+        </div>
+
+        <div class="form-floating col-md-6 col-12 align-self-center">
+            <input type="text" name="user" id="user" class="form-control is-<?=$form_messages["user"]["type"]?>" placeholder="Uživatelské jméno:" value="<?=$_POST["user"]?>">
+            <label for="user" class="form-label">Uživatelské jméno:</label>
+            <div class="<?=$form_messages["user"]["type"]?>-feedback">
+                <?=$form_messages["user"]["text"]?>
+            </div>           
+        </div>
+        <div class="col-md-6 col-12">
+            <div class="row g-3">
+                <div class="form-floating col-12">
+                    <input type="password" name="password" id="password" class="form-control is-<?=$form_messages["password"]["type"]?>" placeholder="Heslo:" value="<?=$_POST["password"]?>">
+                    <label for="password" class="form-label">Heslo:</label>
+                    <div class="<?=$form_messages["password"]["type"]?>-feedback">
+                        <?=$form_messages["password"]["text"]?>
+                    </div>
+                </div>
+                <div class="form-floating col-12">
+                    <input type="password" name="password_again" id="password_again" class="form-control is-<?=$form_messages["password_again"]["type"]?>" placeholder="Heslo znovu:" value="<?=$_POST["password_again"]?>">
+                    <label for="password_again" class="form-label">Heslo znovu:</label>
+                    <div class="<?=$form_messages["password_again"]["type"]?>-feedback">
+                        <?=$form_messages["password_again"]["text"]?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-check col-12">
+            <input type="checkbox" name="agreement" id="agreement" class="form-check-input is-<?=$form_messages["agreement"]["type"]?>" <?= ($_POST["agreement"])?"checked":""?>>
+            <label for="agreement" class="form-check-label">Souhlasím se všeobecnými obchodními podmínkami.</label>
+            <div class="<?=$form_messages["captcha"]["type"]?>-feedback">
+                <?=$form_messages["agreement"]["text"]?>          
+            </div>
+        </div>
+        <div class="form-floating col-md-4 col-12">
+            <input type="number" name="captcha" id="captcha" class="form-control is-<?=$form_messages["captcha"]["type"]?>" placeholder="Zadej aktuální rok:">
+            <label for="captcha" class="form-label">Zadej aktuální rok:</label>
+            <div class="<?=$form_messages["captcha"]["type"]?>-feedback">
+                <?=$form_messages["captcha"]["text"]?>          
+            </div>
+        </div>
+
+        <input type="submit" value="Registrovat" class="btn btn-primary col-12">
+    </form>
+</div>
