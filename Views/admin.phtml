@@ -1,139 +1,139 @@
-<div class="container-fluid container-md users">
-    <div class="row user-head-row d-none d-md-flex ">
-        <div class="col-md-1">
-            <strong class="th ">Id</strong>
+<div class="container text-center users">
+    <div class="row user-head-row d-none d-md-flex">
+        <div class="col-md-1 th d-md-flex">
+            <strong class="">Id</strong>
         </div>
-        <div class="col-md-1">
-            <strong class="th ">JMÉNO</strong>
+        <div class="col-md-1 th">
+            <strong class="">JMÉNO</strong>
         </div>
-        <div class="col-md-1 ">
-            <strong class="th ">PŘÍJMENÍ</strong>
+        <div class="col-md-1 th">
+            <strong class=" ">PŘÍJMENÍ</strong>
         </div>
-        <div class="col-md-1">
-            <strong class="th">UŽIVATELSKÉ JMÉNO</strong>
+        <div class="col-md-1 th">
+            <strong class="">UŽIVATELSKÉ JMÉNO</strong>
         </div>
-        <div class="col-md-1">
-            <strong class="th">Ulice a číslo</strong>
+        <div class="col-md-1 th">
+            <strong class="">Ulice a číslo</strong>
         </div>
-        <div class="col-md-1">
-            <strong class="th">Město</strong>
+        <div class="col-md-1 th">
+            <strong class="">Město</strong>
         </div>
-        <div class="col-md-1 ">
-            <strong class="th">PSČ</strong>
+        <div class="col-md-1 th">
+            <strong class="">PSČ</strong>
         </div>
         
-        <div class="col-md-1">
-            <strong class="th">RČ</strong>
+        <div class="col-md-1 th">
+            <strong class="">RČ</strong>
         </div>
-        <div class="col-md-1">
-            <strong class="th">ČÍSLO OP</strong>
+        <div class="col-md-1 th">
+            <strong class="">ČÍSLO OP</strong>
         </div>
-        <div class="col-md-1">
-            <strong class="th">ADMIN</strong>
+        <div class="col-md-1 th">
+            <strong class="">ADMIN</strong>
         </div>
-        <div class="col-md-2 ">
-            <strong class="th">AKCE</strong>
+        <div class="col-md-2 th">
+            <strong class="">AKCE</strong>
         </div>
     </div>
     <?php foreach ($persons as $person) : ?>
         <div class="row user-row mt-md-0 mt-2">
-            <div class="d-md-none col-6">
-                <strong class="th">ID:</strong>
+            <div class="d-md-none col-6 th">
+                <strong class="">ID:</strong>
             </div>
-            <div class="col-6 col-md-1">
-                <div class="td">
+            <div class="col-6 col-md-1 td">
+                
                     <?= $person["persons_id"] ?>
-                </div>
+                
             </div>
 
-            <div class="d-md-none col-6">
-                <strong class="th align-middle">JMÉNO:</strong>
+            <div class="d-md-none col-6 th">
+                <strong class="align-middle">JMÉNO:</strong>
             </div>
-            <div class="col-6 col-md-1">
-                <div class="td">
+            <div class="col-6 col-md-1 td">
+                
                     <?= $person["first_name"] ?>
-                </div>    
+                    
             </div>
 
-            <div class="d-md-none col-6">
-                <strong class="th">PŘÍJMENÍ:</strong>
+            <div class="d-md-none col-6 th">
+                <strong class="">PŘÍJMENÍ:</strong>
             </div>
-            <div class="col-6 col-md-1">
-                <div class="td">
+            <div class="col-6 col-md-1 td">
+                
                     <?= $person["last_name"] ?>
-                </div>
+                
             </div>
 
-            <div class="d-md-none col-6">
-                <strong class="th">UŽIVATELSKÉ JMÉNO:</strong>
+            <div class="d-md-none col-6 th">
+                <strong class="">UŽIVATELSKÉ JMÉNO:</strong>
             </div>
-            <div class="col-6 col-md-1">
-                <div class="td">
+            <div class="col-6 col-md-1 td">
+                
                     <?= $person["user"] ?>
-                </div>
+                
             </div>
-            <div class="d-md-none col-6">
+            <div class="d-md-none col-6 th">
 
-                <strong class="th">ULICE A ČÍSLO:</strong>
+                <strong class="">ULICE A ČÍSLO:</strong>
             </div>
-            <div class="col-6 col-md-1">
-                <div class="td">
+            <div class="col-6 col-md-1 td">
+                
                     <?= $person["street"]." ".$person["building_identification_number"]."/".$person["house_number"] ?>
-                </div>
+                
             </div>
 
-            <div class="d-md-none col-6">
-                <strong class="th">MĚSTO:</strong>
+            <div class="d-md-none col-6 th">
+                <strong class="">MĚSTO:</strong>
             </div>
-            <div class="col-6 col-md-1">
-                <div class="td">
+            <div class="col-6 col-md-1 td">
+                
                     <?= $person["city"] ?>
-                </div>
+                
             </div>
 
-            <div class="d-md-none col-6">
-                <strong class="th">PSČ:</strong>
+            <div class="d-md-none col-6 th">
+                <strong class="">PSČ:</strong>
             </div>
-            <div class="col-6 col-md-1">
-                <div class="td">
+            <div class="col-6 col-md-1 td">
+            
                     <?= $person["ZIP"] ?>
-                </div>
+                
             </div>
 
-            <div class="d-md-none col-6">
-                <strong class="th">RČ:</strong>
+            <div class="d-md-none col-6 th">
+                <strong class="">RČ:</strong>
             </div>
-            <div class="col-6 col-md-1">
-                <div class="td">
+            <div class="col-6 col-md-1 td">
+                
                     <?= $person["national_id_number"] ?>
-                </div>
+                
             </div>
 
-            <div class="d-md-none col-6">
-                <strong class="th">ČÍSLO OP:</strong>
+            <div class="d-md-none col-6 th">
+                <strong class="">ČÍSLO OP:</strong>
             </div>
-            <div class="col-6 col-md-1">
-                <div class="td">
+            <div class="col-6 col-md-1 td">
+                
                     <?= $person["identity_card_number"] ?>
-                </div>
+                
             </div>
             
-            <div class="d-md-none col-6">
-                <strong class="th">ADMIN:</strong>
+            <div class="d-md-none col-6 th">
+                <strong class="">ADMIN:</strong>
             </div>
-            <div class="col-6 col-md-1">
-                <div class="td">
+            <div class="col-6 col-md-1 td">
+                
                     <?= ($person["admin"])?"ANO":"NE" ?>
-                </div>
+                
             </div>
             
-            <div class="d-md-none col-6">
-                <strong class="th">AKCE:</strong>
+            <div class="d-md-none col-6 th">
+                <strong class="">AKCE:</strong>
             </div>
-            <div class="col-6 col-md-2">
-                <div class="td">
+            <div class="col-6 col-md-2 td">
+            
                     <a href="akce">akce</a>
-                </div>
+                
             </div>
             
         </div>

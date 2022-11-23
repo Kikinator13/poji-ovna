@@ -38,72 +38,87 @@ main{
 }
 
 
-.user-head-row .th{
+/*hlavičkový řádek tabulky uživatelů*/
+.user-head-row{
+    border: 1px solid #212529;
+    padding: 0px;
+}
+/*buňka hlavičky tabulky uživatelů*/
+.th{
+
+    
     color: #ffffff;
-    background-color: #00ff00;
+    background-color: #212529;
 }
 
-.users{
-    font-size: 0.7rem;
-       
-}
-.user-head-row{
-    background-color: #0000ff;
-    padding: 0px 1px 2px 1px;
-    
-}
+/*řádek tabulky uživatelů*/
 .user-row{
-    background-color: #000000;
-    padding: 0px 1px 1px 1px;
+    background-color: green;
+    padding: 0;
 }
+/*buňka tabulky uživatelů*/
 .user-row .th{
     color: #ffffff;
     text-align: right;
+    
 }
-.user-row>div{
-    padding: 2px 1px 2px 1px;
-}
+/*
 .user-head-row>div{
-    padding: 2px 1px 0px 1px; 
+    padding: 0px;
+    border: 1px solid #212529;
 }
+*/
 
-@media (max-width: 767px) {
-    .user-row:nth-child(odd) .td{
-        background-color: #cccccc;
-    }
-}
+
 .user-row:nth-child(even) .td{
     background-color: #cccccc;
 }
-@media (min-width: 768px) {
-    .user-row:nth-child(odd) .td{
-        background-color: #ffffff;
-    }
-    .user-row:hover .td{
-        background-color: #222222;
-        color: #ffffff;
-    }
-    
-              
-}
+
 .user-row:active{
     background-color: #222222;
     color: #ffffff;
 }
 
 .td, .th {
-       
-    display: block;
+    border: 1px solid #212529; 
+    display: flex;
+    flex-direction: column;
     padding: 0.2rem;
+    place-content: center center;
     
-    height: 100%;
+
+    
     
 }
-
-.th{
+strong.th{
+    width: 100%;
+}
+/*pro mobily*/
+@media (max-width: 767px) {
+    .user-row:nth-child(odd) .td{
+        background-color: #cccccc;
+    }
+    .user-row{
+        border: 3px solid #212529; 
+        background-color: #212529;
+    }
+}
+/*pro pc*/
+@media (min-width: 768px) {
+    /*Kontainer tabulky uživatelů, která není tabulkou ale gridem kvůli lepší responzivitě(možnosti hodit na mobilech sloupce pod sebe).*/
+    .users{
+        font-size: 0.7rem;
+        border: 3px solid #212529; 
+        background-color: #212529;
+        height: max-content;
+        padding: -1px 10px;
     
-    background-color: #ffffff;
-    /* background-color: #212529; */
-    color: #ffffff;
-    text-align: center;
+    }
+    .user-row:nth-child(odd) .td{
+        background-color: #ffffff;
+    }
+    .user-row:hover .td{
+        background-color: #212529;
+        color: #ffffff;
+    }             
 }
