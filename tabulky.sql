@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Stř 16. lis 2022, 15:51
+-- Vytvořeno: Čtv 24. lis 2022, 16:11
 -- Verze serveru: 10.4.25-MariaDB
 -- Verze PHP: 8.1.10
 
@@ -59,6 +59,17 @@ CREATE TABLE `addresses` (
   `city` varchar(255) COLLATE utf8_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+--
+-- Vypisuji data pro tabulku `addresses`
+--
+
+INSERT INTO `addresses` (`addresses_id`, `street`, `building_identification_number`, `house_number`, `ZIP`, `city`) VALUES
+(33, 'Hornoměcholupská', 128, 1, 14000, 'Praha 4'),
+(34, 'Lipanská', 25, 4, 13000, 'Praha'),
+(35, 'Šumavská', 45, 5, 12000, 'Praha 2'),
+(36, 'Falešný', 123, 4, 14000, 'Petrovice'),
+(37, 'Horáčkova', 1235, 85, 14000, 'Praha 4');
+
 -- --------------------------------------------------------
 
 --
@@ -89,8 +100,21 @@ CREATE TABLE `persons` (
   `phone` varchar(15) COLLATE utf8_czech_ci NOT NULL,
   `mail` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `address` int(11) DEFAULT NULL,
-  `user` int(11) DEFAULT NULL
+  `user` int(11) DEFAULT NULL,
+  `identity_card_number` varchar(10) COLLATE utf8_czech_ci NOT NULL,
+  `national_id_number` bigint(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+
+--
+-- Vypisuji data pro tabulku `persons`
+--
+
+INSERT INTO `persons` (`persons_id`, `first_name`, `last_name`, `date_of_birth`, `phone`, `mail`, `address`, `user`, `identity_card_number`, `national_id_number`) VALUES
+(12, 'Martin', 'Kikta', '1990-06-18', '+420735614776', 'martin@kikta.cz', 33, 58, '468483186', 9006180051),
+(13, 'Jan', 'Novák', '1973-07-15', '+420546846846', 'Honza.n@seznam.cz', 34, 59, '546848945', 7307156468),
+(14, 'Karel', 'Hošek', '1985-01-24', '+420854648648', 'karel@centrum.cz', 35, 60, '566868AD64', 8501245648),
+(15, 'Pepa', 'Zdepa', '2004-06-18', '+420648618618', 'pepa@gmail.com', 36, 61, '789258654', 5012315164),
+(16, 'Dan', 'Petrák', '2000-06-18', '+420648651864', 'danp@seznam.cz', 37, 62, '222313585', 18066456);
 
 -- --------------------------------------------------------
 
@@ -104,6 +128,17 @@ CREATE TABLE `users` (
   `password` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `admin` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+
+--
+-- Vypisuji data pro tabulku `users`
+--
+
+INSERT INTO `users` (`users_id`, `user`, `password`, `admin`) VALUES
+(58, 'martin', '$2y$10$wUYwBDbRBtfLLDx3TyoKFOpHSnKlQdU0y5IhObwe2Mrchraohd1aW', 1),
+(59, 'novako', '$2y$10$F.jMjnL89NLYtUTnr.myxeklHbsehopZ8TIrVI5Um5q7EomOPktCS', 0),
+(60, 'karlos', '$2y$10$/1F0a6y7CQ8PAYj1o41BVuXDJDI6OqVOwnqyfVBqSjZwOjuP0aOQu', 0),
+(61, 'pepa', '$2y$10$wnv2a8rV.P/aHFBg.MNTreXiSbnav3WKvB251JNClxDSXqJEEbU3e', 0),
+(62, 'danp', '$2y$10$E.2wtUwl7aZvobz57AUzQuvOHeQUzCw8Wzwz1JOJ1YNHCo9PBDMge', 0);
 
 --
 -- Indexy pro exportované tabulky
@@ -144,7 +179,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pro tabulku `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `addresses_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `addresses_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT pro tabulku `articles`
@@ -156,13 +191,13 @@ ALTER TABLE `articles`
 -- AUTO_INCREMENT pro tabulku `persons`
 --
 ALTER TABLE `persons`
-  MODIFY `persons_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `persons_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT pro tabulku `users`
 --
 ALTER TABLE `users`
-  MODIFY `users_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `users_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- Omezení pro exportované tabulky

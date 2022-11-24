@@ -44,6 +44,12 @@
       return $return->rowCount();
     }
 
+    public static function delete(string $table, $parameters) : int
+    {
+      return self::edit("DELETE FROM ".$table." WHERE ".implode(" = ?, ", array_keys($parameters))." = ?", array_values($parameters));
+      
+      
+    }
     public static function insert(string $table, array $parameters = array()) : bool
     {
         return self::edit("INSERT INTO `$table` (`".
@@ -62,10 +68,13 @@
       self::edit($query, $parameters);
       
     } 
+
+    /**začne transakci*/
     public static function startTransaction() : void
     {
       self::$connection->beginTransaction(); 
     }
+    /**commitne transakci */
     public static function commit() : void 
     {
       self::$connection->commit(); 
@@ -121,7 +130,8 @@
       /*}else{
       
       } */     
-    }           
+    }    
+    /**Vrátí id posledního ovlivněného záznamu. */       
     public static function lastId() : int
     {
         return self::$connection->lastInsertId();

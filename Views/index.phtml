@@ -36,7 +36,14 @@
                         <a href="contact" class="nav-link">Kontakt</a>
                     </li>
                     <li class="nav-item">
+                        <?php if(!$user) : ?> <!--když uživatel není příhlášen (místo pole obsahuje null)-->
+                            <a href="login" class="nav-link">login</a>
+                        <?php else :?>
+                                <a href="login/logout" class="nav-link">Odhlásit uživatele <?=$user["user"]?></a> 
+                        <?php endif;?>
                     </li>
+
+                    
                 </ul>
             </div>
 

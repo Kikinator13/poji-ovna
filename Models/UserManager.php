@@ -34,7 +34,7 @@
                 $user_id = Mysql::lastId();
             }
             //Pokud je vyhozena vyjímka...
-            catch (PDOException $error)
+            catch (Exception $error)
             {
                 //Pokud uživatel již existuje...
                 if($error->getCode() == 23000)
@@ -58,7 +58,10 @@
             Mysql::commit();
             
         }
-        public function clearForm(){
+        /**Funkce nastavý všechny proměnné, které vypisuje formulář na prázdný řetězec.
+         *Použijeme v případě, že formulář nebyl ještě odeslán a mi tak nechceme aby něco vypisoval. 
+         */
+        public function clearForm() : void{
             $this->addFormMessage("user", "", TypeOfFormMessage::EMPTY);
             $this->addFormMessage("password", "", TypeOfFormMessage::EMPTY);
             $this->addFormMessage('password_again','', TypeOfFormMessage::EMPTY);               
@@ -326,13 +329,17 @@
          */
         public function logIn(string $name, string $password) : void
         {
+            try{
             $user = Mysql::oneRow('
                 SELECT users_id, user, password, admin
                 FROM users
                 WHERE user = ?
             ', array($name));
-            if (!$user || !password_verify($password,$user['password']))
+            }catch(Exception $error){
                 throw new UserException('Neplatné jméno nebo heslo.',141);
+            }
+            if (!$user || !password_verify($password,$user['password']))
+                throw new UserException('Neplatné jméno nebo heslo.',142);
             $_SESSION['user'] = $user;
         }
 
@@ -370,7 +377,7 @@
                 ON addresses_id = persons.address
                 LIMIT ?, ?;
             ', array($from,$limit));
-            }catch(TypeOfMessage $error){
+            }catch(Exception $error){
                 throw new UserException('Došlo k chybě databáze.', 171);
             }
             return $users;       
@@ -381,10 +388,42 @@
                     SELECT count(*)
                     FROM persons;
                 ');
-            }catch(TypeOfMessage $error){
+            }catch(Exception $error){
                 throw new UserException('Došlo k chybě databáze.', 171);
             }
             return $count;
         }
-
+        /** Odstraní osobu i s jejím uživatelským účtem.
+         *  @param int $personId id osoby
+         *  @return array $Person informace o smazané osobě
+         *  @throws UserException při neúspěchu.
+         */
+        public function deletePerson(int $personId) : int
+        {
+            $user=$this->getUser(); //Aktuálně přihlášený uživatel.
+            
+            try
+            {
+                Mysql::startTransaction();
+                $person=Mysql::oneRow("SELECT persons_id, users.user as user, first_name, last_name, persons.user as userId 
+                    FROM persons join users on users_id=persons.user  WHERE persons_id = ?", array($personId));
+                $countDeletedPersons = Mysql::delete("persons", array("persons_id" => $personId));
+                Mysql::delete("users", array("users_id"=>$person["userId"]));
+                Mysql::commit();
+                
+            }
+            catch(Exception $error)
+            {
+                throw new UserException(" Nepodařilo se odstranit záznam!".$error->getMessage(), 181);
+            }
+            if($countDeletedPersons==1)
+            {
+                return $countDeletedPersons;
+            }
+            else 
+            {
+                $parameters = array("users_id"=>$person["userId"]);
+                throw new UserException(implode(" = ?, ", array_keys($parameters))." =".array_values($parameters).$person["userId"]." Nepodařilo se odstranit záznam!", 182);           
+            }
+        }
     }

@@ -20,7 +20,9 @@
             $this->data['description'] = $this->controller->head['description'];
             $this->data['keyWords'] = $this->controller->head['keyWords'];
             $this->data['messages'] = $this->getMessages();
-
+            $userManager = new UserManager();
+            $this->data['user'] = $userManager->getUser();
+            
             $this->view = 'index';
 
         }
