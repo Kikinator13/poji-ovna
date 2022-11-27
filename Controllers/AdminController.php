@@ -25,7 +25,7 @@ class AdminController extends Controller
         $countPerson=$userManager->countPersons();
         
         //Zavoláme paginátor.
-        $paginator = new Paginator($countPerson, $from, $to);
+        $paginator = new Paginator("admin" ,$countPerson, $from, $to);
         
         $limit = $paginator->getLimit();
         

@@ -93,6 +93,14 @@ main{
 strong.th{
     width: 100%;
 }
+
+.page-item.active a{
+    cursor: default !important;
+}
+.page-item.active a:focus{
+    box-shadow: none !important;
+}
+
 /*pro mobily*/
 @media (max-width: 767px) {
     .user-row:nth-child(odd) .td{

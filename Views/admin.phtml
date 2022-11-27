@@ -141,25 +141,13 @@
 
     <nav aria-label="stránkování">
         <ul class="pagination justify-content-center ">
-            <?php foreach ($pages as $page => $url) : ?>
-                <?php if ($url == "disabled") : ?>
-                    <li class="page-item disabled">
-                        <span class="page-link"><?= $page ?></span>
-                    </li>
-                <?php elseif ($url == "..." || $page == "right_dots") : ?>
-                    <li class="page-item disabled">
-                        <span class="page-link">...</span>
+            <?php foreach ($pages as $page) : ?>
+                    <li class="page-item <?= $page["class"] ?>">
+                        <a href="<?=$page["url"]?>" class="page-link" tabindex = "<?= $page["tabindex"] ?>">
+                            <?=$page["label"]?> 
+                        </a>
                     </li>
                 
-                <?php elseif ($url == "active") : ?>
-                    <li class="page-item active" aria-current="page">
-                        <span class="page-link"><?= $page ?></span>
-                    </li>
-                <?php else : ?>
-                    <li class="page-item">
-                        <a href="admin/<?= $url ?>" class="page-link"><?= $page ?></a>
-                    </li>
-                <?php endif; ?>
             <?php endforeach; ?>
         </ul>
     </nav>
