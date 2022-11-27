@@ -7,7 +7,7 @@ body{
 main{
     display: flex;
     flex: 1;
-    background-color: #77ff77;
+    
     padding: 1rem;
 }
 
@@ -103,6 +103,10 @@ strong.th{
         background-color: #212529;
     }
 }
+
+.pagination{
+    margin-top: 15px;       
+}
 /*pro pc*/
 @media (min-width: 768px) {
     /*Kontainer tabulky uživatelů, která není tabulkou ale gridem kvůli lepší responzivitě(možnosti hodit na mobilech sloupce pod sebe).*/
@@ -120,5 +124,5 @@ strong.th{
     .user-row:hover .td{
         background-color: #212529;
         color: #ffffff;
-    }             
+    }                 
 }
