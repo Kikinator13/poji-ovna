@@ -69,16 +69,22 @@
       
     } 
 
-    /**začne transakci*/
+    /** začne transakci */
     public static function startTransaction() : void
     {
       self::$connection->beginTransaction(); 
     }
-    /**commitne transakci */
+    /** commitne transakci */
     public static function commit() : void 
     {
       self::$connection->commit(); 
     }
+    /** Zruší transakci */
+    public static function rollBack() : void
+    {
+      self::$connection->rollBack(); 
+    }
+
     public static function multiUpdate(string $table, array $param){
       //print_r($data);
       //pokud vkládáme více než jeden řádek.
