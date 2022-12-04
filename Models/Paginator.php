@@ -17,7 +17,7 @@
                 $to = $auxiliary;
             }                        
             $this->to = $to;
-            $this->limit = $to - $from + 1;
+            $this->limit = $to - $from+1;
             
             if(!is_numeric($from)){
                 $from=0;
@@ -25,17 +25,17 @@
             
             $this->from = $from;            
             $this->totalItems = $totalItems;
-            if($this->from % $this->limit==0){
-                $this->totalPages = ceil($totalItems/$this->limit);
-            }else{
-                $this->totalPages = $totalItems/$this->limit+1;
-            }
+            $startOverflow = $this->from % $this->limit;
+            $endOverflow=$this->limit-($this->totalItems % $this->limit);
+            echo $startOverflow." ". $endOverflow;
+            $this->totalPages = ceil($totalItems/$this->limit);
             
+            if($startOverflow>$endOverflow) $this->totalPages++;
+           
         }
        
         public function GeneratePagination(int $radius) : array
         {
-            
             $pagination=array();
             $current = $this->getCurrent();
             if($this->to-$this->from>=$this->totalItems){
@@ -70,8 +70,6 @@
                 $pagination[1]["tabindex"] = 0;
             }
 
-            //$pagination["&laquo;"] = ?"disabled":$this->generateUrlParameters($current-1);
-            //$pagination["1"] = (1==$current)?"active":$this->generateUrlParameters(1);            
             
             //tečky pokud je minimum poloměru větší než 2(tedy je za šipkou a první stránkou). 
             if($radiusMin>2){
@@ -97,7 +95,6 @@
                         $pagination[$key]["url"]=$this->generateUrlParameters($i);
                         $pagination[$key]["tabindex"] = 0;
                     }
-                    //$pagination[$i] = ($i==$current)?"active":$this->generateUrlParameters($i);
                     //klíč se o jedna zvýší
                     $key++;
                 }
@@ -111,7 +108,6 @@
                 //Klíč zvýšíme o jedničku protože tečky vytvořili další položku.
                 $key++;
             }
-            //$pagination["right_dots."] = "...";
             
             //poslední strana
             $pagination[$key]["label"] = $this->totalPages;
@@ -127,7 +123,6 @@
             }
             //Klíč zvedneme o 1;
             $key++;
-            //$pagination[$this->totalPages] = ($this->totalPages==$current)?"active":$this->generateUrlParameters($this->totalPages);
             //šipka vpřed
             $pagination[$key]["label"] = ">";
             //Pokud je poslední položka aktuální
@@ -139,10 +134,7 @@
                 $pagination[$key]["class"] = "";
                 $pagination[$key]["url"] = $this->generateUrlParameters($current+1);
                 $pagination[$key]["tabindex"] = 0;
-
             }
-                //$pagination["&raquo;"] = ($this->totalPages==$current)?"disabled":$this->generateUrlParameters($current+1);
-            
             return $pagination;
         }
  
@@ -160,7 +152,6 @@
             }else{
                 if($this->from<0){
                     $from = $page * $limit-$limit + $modulo;
-                    echo $from." ";
                 }else{
                     $from = $page * $limit-2*$limit + $modulo;
                 }

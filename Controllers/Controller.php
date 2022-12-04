@@ -77,7 +77,7 @@
             if (!$user || ($admin && !$user['admin']))
             {
                 $this->addMessage('Nedostatečná oprávnění.');
-                $this->redirect('pojistovna/login');
+                $this->redirect('login');
             }
         }
     }

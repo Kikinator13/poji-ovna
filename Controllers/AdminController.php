@@ -8,7 +8,8 @@ class AdminController extends Controller
         // Hlavička stránky
         $this->hlavicka['titulek'] = 'Administrace';
         // Získání dat o přihlášeném uživateli
-        $userManager = new UserManager();
+        $personManager = new PersonManager();
+        
         if(isset($parameters[1]) && $parameters[1] != "") {
             $from = $parameters[0];
             $to = $parameters[1];
@@ -22,7 +23,7 @@ class AdminController extends Controller
             $to = 9;
           
         }
-        $countPerson=$userManager->countPersons();
+        $countPerson=$personManager->countPersons();
         
         //Zavoláme paginátor.
         $paginator = new Paginator("admin" ,$countPerson, $from, $to);
@@ -34,7 +35,7 @@ class AdminController extends Controller
         //echo $from . " " . $to . " " . $limit;
         //exit;
         try {
-            $persons = $userManager->getPersons($from, $limit);
+            $persons = $personManager->getPersonsAll($from, $limit);
         } catch (UserException $error) {
             $this->addMessage($error->getMessage(), TypeOfMessage::ERROR);
         }

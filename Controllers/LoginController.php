@@ -22,7 +22,7 @@
                 {
                     $userManager->login($_POST['name'], $_POST['password']);
                     $this->addMessage('Byl jste úspěšně přihlášen.', TypeOfMessage::SUCCESS);
-                    $this->redirect('admin');
+                    $this->redirect('profil/'.$_SESSION["users_id"]);
                 }
                 catch (UserException $error)
                 {

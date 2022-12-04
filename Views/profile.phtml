@@ -1,0 +1,23 @@
+<div class="profile-table container">
+    <h2 class="text-white text-center">Profil uživatele <?= $person["user"] ?> </h2>
+    <div class="row user-row bg-dark">
+        <div class="th col-6">Jméno:</div>
+        <div class="td col-6"><?= $person["first_name"] ?></div>
+   
+        <div class="th col-6">Příjmení:</div>
+        <div class="td col-6"><?= $person["last_name"] ?></div>
+   
+        <div class="th col-6">adresa:</div>
+        <div class="td col-6">
+            <?= $person["street"] ?>
+            <?= $person["building_identification_number"] ?>/<?= $person["house_number"] ?>
+            <br>
+            <?= $person["city"] ?> <?= $person["ZIP"] ?>
+            <a href="javascript: edit()" class="align-self-end ms-auto"><img src="img/pen.png" alt="editovat" class="icon"></a>
+        </div>
+
+    </div>
+
+
+
+</div>

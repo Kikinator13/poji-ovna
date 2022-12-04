@@ -1,11 +1,18 @@
-<h1>Přihlášení do administrace</h1>
+<div class="login-container container p-4 bg-dark rounded-5">
+    <h2 class = "text-white mb-3 text-center">Přihlašte se</h2>
+    <form method="POST" novalidate="novalidate" class="text-center">
 
-<form method="POST">
-    Uživatelské jméno<br />
-    <input type="text" name="name" /><br />
-    Heslo<br />
-    <input type="password" name="password" /><br />
-    <input type="submit" value="Přihlásit" />
-</form>
-
-<p>Pokud ještě nemáte účet, <a href="registration">zaregistrujte se</a>.</p>
+        <div class="form-floating mb-3">
+            <input type="text" name="name" id="name" class="form-control " placeholder="uživatelské jméno">
+            <label for="name" class="form-label">uživatelské jméno:</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="password" id="password" name="password" class="form-control" placeholder="heslo:">
+            <label for="password" class="form-label">heslo:</label>
+        </div>
+        <input type="submit" value="Přihlásit" class="btn btn-primary mb-3">
+    </form>
+    <p class="text-white text-left">
+        Pokud ještě nemáte účet, <a href="register">zaregistrujte se</a>.
+    </p>
+</div>

@@ -58,14 +58,12 @@
                 array_values($parameters));
     }
 
-    public static function update(string $table, array $parameters = array(), string $condition = "", array $parametersOfCondition = array()){      
-      //Pokud je první parametr pole,
-        
-      $query="update `".$table."` set `";
-      $query.=implode("` = ? , `", array_keys($parameters))."` = ? ";
-      $query.="where ".$condition.";";
+    public static function update(string $table, array $parameters = array(), string $condition = "", array $parametersOfCondition = array()){          
+      $query="UPDATE `".$table."` SET `";
+      $query.=implode("` = ?, `", array_keys($parameters))."` = ? ";
+      $query.="WHERE ".$condition.";";
       $parameters=array_merge(array_values($parameters), $parametersOfCondition);
-      self::edit($query, $parameters);
+      return self::edit($query, $parameters);
       
     } 
 

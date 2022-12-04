@@ -1,55 +1,32 @@
 <div class="container text-center users">
     <div class="row user-head-row d-none d-md-flex">
-        <div class="col-md-1 th d-md-flex">
-            <strong class="">Id</strong>
-        </div>
-        <div class="col-md-1 th">
-            <strong class="">JMÉNO</strong>
-        </div>
-        <div class="col-md-1 th">
-            <strong class=" ">PŘÍJMENÍ</strong>
-        </div>
-        <div class="col-md-1 th">
-            <strong class="">UŽIVATELSKÉ JMÉNO</strong>
-        </div>
-        <div class="col-md-1 th">
-            <strong class="">Ulice a číslo</strong>
-        </div>
-        <div class="col-md-1 th">
-            <strong class="">Město</strong>
-        </div>
-        <div class="col-md-1 th">
-            <strong class="">PSČ</strong>
-        </div>
-
-        <div class="col-md-1 th">
-            <strong class="">RČ</strong>
-        </div>
-        <div class="col-md-1 th">
-            <strong class="">ČÍSLO OP</strong>
-        </div>
-        <div class="col-md-1 th">
-            <strong class="">ADMIN</strong>
+        <div class="col-md-2 th">
+            JMÉNO
         </div>
         <div class="col-md-2 th">
-            <strong class="">AKCE</strong>
+            PŘÍJMENÍ
+        </div>
+        <div class="col-md-2 th">
+            Ulice a číslo
+        </div>
+        <div class="col-md-2 th">
+            Město
+        </div>
+        <div class="col-md-2 th">
+            PSČ
+        </div>
+        <div class="col-md-2 th">
+            AKCE
         </div>
     </div>
     <?php foreach ($persons as $person) : ?>
         <div class="row user-row mt-md-0 mt-2">
-            <div class="d-md-none col-6 th">
-                <strong class="">ID:</strong>
-            </div>
-            <div class="col-6 col-md-1 td">
-
-                <?= $person["persons_id"] ?>
-
-            </div>
+            
 
             <div class="d-md-none col-6 th">
                 <strong class="align-middle">JMÉNO:</strong>
             </div>
-            <div class="col-6 col-md-1 td">
+            <div class="col-6 col-md-2 td">
 
                 <?= $person["first_name"] ?>
 
@@ -58,25 +35,16 @@
             <div class="d-md-none col-6 th">
                 <strong class="">PŘÍJMENÍ:</strong>
             </div>
-            <div class="col-6 col-md-1 td">
+            <div class="col-6 col-md-2 td">
 
                 <?= $person["last_name"] ?>
 
             </div>
 
             <div class="d-md-none col-6 th">
-                <strong class="">UŽIVATELSKÉ JMÉNO:</strong>
-            </div>
-            <div class="col-6 col-md-1 td">
-
-                <?= $person["user"] ?>
-
-            </div>
-            <div class="d-md-none col-6 th">
-
                 <strong class="">ULICE A ČÍSLO:</strong>
             </div>
-            <div class="col-6 col-md-1 td">
+            <div class="col-6 col-md-2 td">
 
                 <?= $person["street"] . " " . $person["building_identification_number"] . "/" . $person["house_number"] ?>
 
@@ -85,7 +53,7 @@
             <div class="d-md-none col-6 th">
                 <strong class="">MĚSTO:</strong>
             </div>
-            <div class="col-6 col-md-1 td">
+            <div class="col-6 col-md-2 td">
 
                 <?= $person["city"] ?>
 
@@ -94,46 +62,21 @@
             <div class="d-md-none col-6 th">
                 <strong class="">PSČ:</strong>
             </div>
-            <div class="col-6 col-md-1 td">
+            <div class="col-6 col-md-2 td">
 
                 <?= $person["ZIP"] ?>
 
             </div>
 
-            <div class="d-md-none col-6 th">
-                <strong class="">RČ:</strong>
-            </div>
-            <div class="col-6 col-md-1 td">
 
-                <?= $person["national_id_number"] ?>
-
-            </div>
-
-            <div class="d-md-none col-6 th">
-                <strong class="">ČÍSLO OP:</strong>
-            </div>
-            <div class="col-6 col-md-1 td">
-
-                <?= $person["identity_card_number"] ?>
-
-            </div>
-
-            <div class="d-md-none col-6 th">
-                <strong class="">ADMIN:</strong>
-            </div>
-            <div class="col-6 col-md-1 td">
-
-                <?= ($person["admin"]) ? "ANO" : "NE" ?>
-
-            </div>
-
+            
             <div class="d-md-none col-6 th">
                 <strong class="">AKCE:</strong>
             </div>
-            <div class="col-6 col-md-2 td">
-
-                <a href="registration/delete/<?= $person["persons_id"] ?>">smazat</a>
-
+            <div class="col-6 col-md-2 td action">
+                <a href="profile/<?= $person["persons_id"] ?>">Detail</a>
+                <a href="register/update/<?= $person["persons_id"] ?>"><img class="icon" src="img/pen.png" alt="editovat"></a>
+                <a href="register/delete/<?= $person["persons_id"] ?>"><img class="icon" src="img/cross.png" alt="odstranit"></a>
             </div>
 
         </div>
