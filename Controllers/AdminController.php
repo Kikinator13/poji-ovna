@@ -4,10 +4,10 @@ class AdminController extends Controller
     public function work(array $parameters): void
     {        
         // Do administrace mají přístup jen přihlášení uživatelé s právy admina.
-        //$this->userVerify(true);
+        $this->userVerify(true);
         // Hlavička stránky
         $this->hlavicka['titulek'] = 'Administrace';
-        // Získání dat o přihlášeném uživateli
+        //Volání personManagera.
         $personManager = new PersonManager();
         
         if(isset($parameters[1]) && $parameters[1] != "") {
@@ -36,9 +36,13 @@ class AdminController extends Controller
         //exit;
         try {
             $persons = $personManager->getPersonsAll($from, $limit);
+            
+        
         } catch (UserException $error) {
+            
             $this->addMessage($error->getMessage(), TypeOfMessage::ERROR);
         }
+        
         $this->data["pages"] = $paginator->GeneratePagination(2);
         
         //Předání dat o osobě viewu.

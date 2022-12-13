@@ -12,7 +12,7 @@
             $address=array_values($address);            
             try{
                 //Zavoláme proceduru, která vloží adresu jen pokud ještě neexistuje a poskytne její id.
-                $countRows=Mysql::edit("CALL insert_address(?, ?, ?, ?, ?, @id);", $address);   
+                $countRows=Mysql::edit("CALL insert_address(?, ?, ?, ?, @id);", $address);   
             }catch(Exception $error){
                 throw new UserException('Při vkládání adresy do databáze došlo k chybě!', 30101, $error);
                 
@@ -65,21 +65,29 @@
             
         }
 
-        public function addressValidation(Validator $validator) : bool|array
+        public function getAddress($id, ...$columns ){ 
+            $columns=implode(", ", $columns);
+            return Mysql::oneRow(
+                "SELECT ".$columns." FROM addresses 
+            WHERE addresses_id = ?", 
+            array($id),
+            PDO::FETCH_ASSOC
+        );
+        }
+        public function addressValidation(Validator $validator) : ?array
         {
             //Proměnná ukazuje je li vše ok.
             $ok = true;
             
             $address = array(
-                "street" => $validator->streetValidation(), 
-                "building_identification_number" => $validator->buildingIdentificationNumberValidation(), 
-                "house_number" => $validator->houseNumberValidation(), 
+                "street_and_number" => $validator->streetAndNumberValidation(), 
                 "ZIP" => $validator->ZIPValidation(), 
-                "city" => $validator->cityValidation() 
+                "city" => $validator->cityValidation(),
+                "state" => $validator->stateValidation()
             );
             
-            foreach ($address as $passed){
-                if (!$passed){
+            foreach ($address as $validation){
+                if ($validation === null){
                     $ok = false;
                 }     
             }
@@ -87,7 +95,7 @@
             //když je vše ok vrátí pole připravené pro vložení do databáze.
             if($ok) return $address;  
             //jinak vrátí false
-            else return false;            
+            else return null;            
         }
         
     }

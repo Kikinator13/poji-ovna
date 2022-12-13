@@ -1,23 +1,251 @@
+
 <div class="profile-table container">
-    <h2 class="text-white text-center">Profil uživatele <?= $person["user"] ?> </h2>
+    <h2 class="text-white text-center">Profil uživatele <?= $person["first_name"] ?> <?= $person["last_name"] ?> </h2>
     <div class="row user-row bg-dark">
         <div class="th col-6">Jméno:</div>
-        <div class="td col-6"><?= $person["first_name"] ?></div>
-   
-        <div class="th col-6">Příjmení:</div>
-        <div class="td col-6"><?= $person["last_name"] ?></div>
-   
-        <div class="th col-6">adresa:</div>
-        <div class="td col-6">
-            <?= $person["street"] ?>
-            <?= $person["building_identification_number"] ?>/<?= $person["house_number"] ?>
-            <br>
-            <?= $person["city"] ?> <?= $person["ZIP"] ?>
-            <a href="javascript: edit()" class="align-self-end ms-auto"><img src="img/pen.png" alt="editovat" class="icon"></a>
+        <div class="td col-6" id="first_name-container">
+            <div>
+                <span id="first_name-span">
+                    <?= $person["first_name"] ?>
+                </span>
+            </div>
+            <a href="javascript: openForm('first_name-container')" class="align-self-end ms-auto <?=$edit["first_name"]?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
         </div>
+        <div class="col-6 p-0 td d-none" id="first_name-container-form">
+            <form class="row g-0 w-100">
+                <div class="col-8">
+                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Křestní jméno:" value="<?= $person["first_name"] ?>" aria-label="Křestní jméno">
+                    <div class="invalid-feedback" id="first_name-feedback">
+
+                    </div>
+                </div>
+                <div class="col-4">
+                    <input type="submit" class="btn btn-dark w-100" value="změnit">
+                </div>
+            </form>
+        </div>
+            
+        
+
+        <div class="th col-6">Příjmení:</div>
+        <div class="td col-6" id="last_name-container">
+            <div>
+                <span id="last_name-span">
+                    <?= $person["last_name"] ?>
+                </span>
+            </div>
+            <a href="javascript: openForm('last_name-container')" class="align-self-end ms-auto <?=$edit["last_name"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+        </div>
+        <div class="col-6 p-0 td d-none" id="last_name-container-form">
+            <form class="row g-0 w-100">
+                <div class="col-8">
+                    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Příjmení:" value="<?= $person["last_name"] ?>" aria-label="Příjmení">
+                    <div class="invalid-feedback" id="first_name-feedback">
+
+                    </div>
+                </div>
+                <div class="col-4">
+                    <input type="submit" class="btn btn-dark w-100" value="změnit">
+                </div>
+            </form>
+        </div>
+
+        <div class="th col-6">Uživatelské jméno:</div>
+        <div class="td col-6" id="user_name-container">
+            <div>
+                <span id="user_name-span">
+                    <?= $person["user_name"] ?>
+                </span>
+            </div>
+            <a href="javascript: openForm('user_name-container')" class="align-self-end ms-auto <?=$edit["user_name"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+        </div>
+        <div class="col-6 p-0 td d-none" id="user_name-container-form">
+            <form class="row g-0 w-100">
+                <div class="col-8">
+                    <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Uživatelské jméno:" value="<?= $person["user_name"] ?>" aria-label="Uživatelské jméno">
+                    <div class="invalid-feedback" id="first_name-feedback">
+
+                    </div>
+                </div>
+                <div class="col-4">
+                    <input type="submit" class="btn btn-dark w-100" value="změnit">
+                </div>
+            </form>
+        </div>
+        <div class="th col-6">Heslo:</div>
+        <div class="td col-6" id="user_name-container">
+            
+                <a href="javascript: openForm('password-container')" class="btn btn-dark w-100">změnit heslo</a>
+                
+            
+        </div>
+        <div class="col-6 p-0 td d-none" id="user_name-container-form">
+            <form class="row g-0 w-100">
+                <div class="col-8">
+                    <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Uživatelské jméno:" value="<?= $person["user_name"] ?>" aria-label="Uživatelské jméno">
+                    <div class="invalid-feedback" id="first_name-feedback">
+
+                    </div>
+                </div>
+                <div class="col-4">
+                    <input type="submit" class="btn btn-dark w-100" value="změnit">
+                </div>
+            </form>
+        </div>
+        <div class="th col-6">adresa:</div>
+        <div class="td col-6 m-0" id="address">
+            <address class="mb-0">
+                <span id="street_and_number-span">
+                    <?= $person["street_and_number"] ?>
+                </span>
+                <br>
+                <span id="ZIP-span"><?= $person["ZIP"] ?></span>&nbsp;
+                <span id="city-span"><?= $person["city"] ?></span>
+                <br>
+                <span id="state-span" data-index="<?= $person["state"] ?>"><?= $person["state_name"] ?></span>
+
+            </address>
+            <a href="javascript: openForm('address')" class="align-self-end ms-auto <?=$edit["address"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+        </div>
+        <div class="col-6 p-1 td d-none" id="address-form">
+            <form class="row g-1">
+                <div class="col-12">
+                    <input id="street_and_number" class=" form-control " placeholder="adresa a číslo:" value="<?= $person["street_and_number"] ?>" aria-label="ulice a číslo:">
+                    <div class="invalid-feedback" id="street_and_number-feedback">
+
+                    </div>
+                </div>
+                <div class="col-6">
+                    <input id="city" class="form-control" placeholder="město:" value="<?= $person["city"] ?>" aria-label="město">
+                    <div class="invalid-feedback" id="city-feedback">
+
+                    </div>
+                </div>
+                <div class="col-6">
+                    <input id="ZIP" class="form-control" placeholder="PSČ:" value="<?= $person["ZIP"] ?>" aria-label="poštovní směrovací číslo">
+                    <div class="invalid-feedback" id="ZIP-feedback">
+
+                    </div>
+                </div>
+                <div class="col-12">
+                    <select id="state" name="state" class="form-select" aria-label="poštovní směrovací číslo">
+                        <?php foreach ($states as $state) : ?>
+                            <option value="<?= $state["state_id"] ?>" <?= ($state["state_id"] == $person["state"]) ? "selected" : "" ?>><?= $state["state_name"] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="invalid-feedback" id="state-feedback">
+
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-dark" value="změnit">
+
+            </form>
+        </div>
+        <div class="th col-6">E-mail:</div>
+        <div class="td col-6" id="mail-container">
+            <div>
+                <span id="mail-span">
+                    <?= $person["mail"] ?>
+                </span>
+            </div>
+            <a href="javascript: openForm('mail-container')" class="align-self-end ms-auto <?=$edit["mail"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+        </div>
+        <div class="col-6 p-0 td d-none" id="mail-container-form">
+            <form class="row g-0 w-100">
+                <div class="col-8">
+                    <input type="text" class="form-control" id="mail" name="mail" placeholder="E-mail:" value="<?= $person["mail"] ?>" aria-label="E-mailová adresa">
+                    <div class="invalid-feedback" id="mail-feedback">
+
+                    </div>
+                </div>
+                <div class="col-4">
+                    <input type="submit" class="btn btn-dark w-100" value="změnit">
+                </div>
+            </form>
+        </div>
+        <div class="th col-6">Telefon:</div>
+        <div class="td col-6" id="phone-container">
+            <div>
+                <span id="area_code-span" data-index="<?= $person["area_code_id"] ?>">
+                    <?= $person["area_code"] ?>
+                </span>
+                <span id="phone-span">
+                    <?= $person["phone"] ?>
+                </span>
+            </div>
+            <a href="javascript: openForm('phone-container')" class="align-self-end ms-auto <?=$edit["phone"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+        </div>
+        <div class="col-6 p-0 td d-none" id="phone-container-form">
+            <form class="g-1 row w-100" method="POST">
+                <div class="col-auto ">
+                    <select id="area_code" class="area-code input-group-text" name="area_code">
+                        <?php foreach ($area_codes as $area_code) : ?>
+                            <option value="<?= $area_code["area_code_id"] ?>" <?= ($area_code["area_code"] == $person["area_code"]) ? "selected" : "" ?>><?= $area_code["area_code"] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="invalid-feedback" id="area_code-feedback">
+                    </div>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="telefon:" value="<?= $person["phone"] ?>" aria-label="Telefonní číslo">
+                    <div class="invalid-feedback" id="phone-feedback">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <input type="submit" class="btn btn-dark w-100" value="změnit">
+                </div>
+            </form>
+        </div>
+        <div class="th col-6">Rodné číslo:</div>
+        <div class="td col-6" id="national_id_number-container">
+            <div>
+                <span id="national_id_number-span">
+                    <?= $person["national_id_number"] ?>
+                </span>
+            </div>
+            <a href="javascript: openForm('national_id_number-container')" class="align-self-end ms-auto <?=$edit["national_id_number"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+        </div>
+        <div class="col-6 p-0 td d-none" id="national_id_number-container-form">
+            <form class="row g-0 w-100">
+                <div class="col-8">
+                    <input type="text" class="form-control" id="national_id_number" name="national_id_number" placeholder="Rodné číslo:" value="<?= $person["national_id_number"] ?>" aria-label="Rodné číslo">
+                    <div class="invalid-feedback" id="national_id_number-feedback">
+
+                    </div>
+                </div>
+                <div class="col-4">
+                    <input type="submit" class="btn btn-dark w-100" value="změnit">
+                </div>
+            </form>
+        </div>
+        <div class="th col-6">Číslo občanského průkazu:</div>
+        <div class="td col-6" id="identity_card_number-container">
+            <div>
+                <span id="identity_card_number-span">
+                    <?= $person["identity_card_number"] ?>
+                </span>
+            </div>
+            <a href="javascript: openForm('identity_card_number-container')" class="align-self-end ms-auto <?=$edit["identity_card_number"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+        </div>
+        <div class="col-6 p-0 td d-none" id="identity_card_number-container-form">
+            <form class="row g-0 w-100">
+                <div class="col-8">
+                    <input type="text" class="form-control" id="identity_card_number" name="national_id_number" placeholder="Rodné číslo:" value="<?= $person["national_id_number"] ?>" aria-label="Rodné číslo">
+                    <div class="invalid-feedback" id="identity_card_number-feedback">
+
+                    </div>
+                </div>
+                <div class="col-4">
+                    <input type="submit" class="btn btn-dark w-100" value="změnit">
+                </div>
+            </form>
+        </div>
+
 
     </div>
 
 
 
 </div>
+<input type="hidden" id="id" value="<?= $person["persons_id"] ?>">
+<script src="../scripts/AjaxUpdater.js"></script>

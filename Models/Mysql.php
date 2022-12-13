@@ -21,19 +21,19 @@
       }
     }
     //Funkce pro dotaz vracející jeden řádek tabulky.
-    public static function oneRow(string $query, array $parameters = array()) : array|bool{ 
+    public static function oneRow(string $query, array $parameters = array(), $mode = PDO::FETCH_DEFAULT) : array|bool{ 
       $return = self::$connection->prepare($query);
       $return->execute($parameters);
-      return $return->fetch();
+      return $return->fetch($mode);
     }
     //Funkce pro dotaz vracející více řádků tabulky.
-    public static function moreRows(string $query, array $parameters = array()) : array|bool{
+    public static function moreRows(string $query, array $parameters = array(), $mode=PDO::FETCH_DEFAULT) : ?array{
       $return = self::$connection->prepare($query);
       $return->execute($parameters);
-      return $return->fetchAll();
+      return $return->fetchAll($mode);
     }
     //Funkce pro vložení dotazu, který vrací jen jednu hodnotu. 
-    public static function oneValue(string $query, array $parameters = array()) : string{
+    public static function oneValue(string $query, array $parameters = array()) : string|bool{
       $return = self::oneRow($query, $parameters);
       return $return[0];
     } 

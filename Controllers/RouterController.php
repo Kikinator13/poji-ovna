@@ -21,7 +21,7 @@
             $this->data['keyWords'] = $this->controller->head['keyWords'];
             $this->data['messages'] = $this->getMessages();
             $userManager = new UserManager();
-            $this->data['user'] = $userManager->getUser();
+            $this->data['user'] = $userManager->getLoggedUser();
             
             $this->view = 'index';
 

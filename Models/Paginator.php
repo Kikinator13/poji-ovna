@@ -10,6 +10,7 @@
         public function __construct(string $url,int $totalItems, int $from=0, int $to=0){
             $this->url = $url;
             
+            
             //pokud je do menší než do tak je prohodíme
             if($to < $from){
                 $auxiliary = $from;
@@ -22,23 +23,54 @@
             if(!is_numeric($from)){
                 $from=0;
             }
-            
+            //$from=($from<0)?($from+$this->limit):$from;
             $this->from = $from;            
+            ($from<0-$this->limit)?0:$from;
+            ($to<0)?0:$to;
+            if($from<0) $from += $this->limit;
             $this->totalItems = $totalItems;
-            $startOverflow = $this->from % $this->limit;
-            $endOverflow=$this->limit-($this->totalItems % $this->limit);
-            echo $startOverflow." ". $endOverflow;
-            $this->totalPages = ceil($totalItems/$this->limit);
+            echo "from: ".$from."<br>";
+            $page1=$from % $this->limit;
+            echo "1. strana : ".$page1."<br>";
+            echo "limit: ".$this->limit."<br>";
+            echo "položek: ".$this->totalItems."<br>";
+            $totalPages=ceil($totalItems / $this->limit);
+            $modulo = $totalItems % $this->limit;
+            echo "Položek navíc:".$modulo."<br>";
+            if($modulo != $page1)
+                    $totalPages++;
             
-            if($startOverflow>$endOverflow) $this->totalPages++;
-           
+    
+
+            $this->totalPages=$totalPages;
+            echo "<br>počet stran: ". $totalPages;
+            /*
+            echo "Počet stránek bez první a poslední:". $totalPages=floor($totalItems / $this->limit);
+            echo "<br>položek na první straně: ".$startOverflow = ($this->from) % $this->limit;
+            echo "<br>položek na poslední straně: ".$endOverflow = $this->totalItems-($this->limit*$totalPages)-$startOverflow;
+            //($startOverflow > 0 )? $startOverflow:0;
+            //($endOverflow > 0 )? $startOverflow:0;
+            echo "<br>Počáteční přetečení: ".$startOverflow."<bt> Přetečení na konci:". $endOverflow.
+            "<br> limit:". $this->limit."<br> počet položek:". $totalItems."<br> počet položek / limit: ".($this->totalItems / $this->limit);
+            
+            $this->totalPages = ceil($totalItems/$this->limit);
+            echo "<br>podmínka: ". $endOverflow - $startOverflow;
+            if ($endOverflow + $startOverflow==0){
+                echo"<br> stránek celkem: ".$this->totalPages;
+                $this->totalPages++;
+            }
+            echo"<br> stránek celkem: ".$this->totalPages;
+                
+           */
+            
         }
        
         public function GeneratePagination(int $radius) : array
         {
             $pagination=array();
             $current = $this->getCurrent();
-            if($this->to-$this->from>=$this->totalItems){
+            //if($this->to-$this->from+1>=$this->totalItems){
+            if($this->totalPages == 1){
                 return $pagination;
             }
             //Minimum a maximum poloměru $radius
@@ -68,9 +100,7 @@
                 $pagination[1]["class"] = "";  
                 $pagination[1]["url"] = $this->generateUrlParameters(1);
                 $pagination[1]["tabindex"] = 0;
-            }
-
-            
+            }        
             //tečky pokud je minimum poloměru větší než 2(tedy je za šipkou a první stránkou). 
             if($radiusMin>2){
                 $pagination[2]["label"]="...";

@@ -70,12 +70,20 @@
         }
         
         
-        public function userVerify(bool $admin = false) : void
+        public function userVerify(bool|int $authorization=false) : void
         {
             $userManager = new UserManager();
-            $user = $userManager->getUser();
-            if (!$user || ($admin && !$user['admin']))
+            $user = $userManager->getLoggedUser();
+            //var_dump($admin == $user["persons_id"]);
+            if (!$user || ($authorization && (!($user['admin'] || $authorization === $user["persons_id"]))))
             {
+                if(isset($_POST["ajax"])){
+                    $message["message"]["text"]="Nedostatečná oprávnění!";
+                    $message["message"]["type"]="ERROR";
+                    $message["errors"]=array();
+                    echo json_encode($message);
+                    exit;
+                }
                 $this->addMessage('Nedostatečná oprávnění.');
                 $this->redirect('login');
             }

@@ -75,18 +75,19 @@
          * @throws UserException 20301 pokud PDO vyhodí výjimku 
          * @throws UserException 20302 pokud počet upravených záznamů není jedna
          */
-        public function updateUser(array $user) : bool
+        public function updateUser(array $user, $userId) : bool
         {
             
+
             try{ 
-                $countRows = Mysql::update('users', $user, "users_id = ?", array($user["users_id"]));
+                $countRows = Mysql::update('users', $user, "users_id = ?", array($userId));
             }catch(Exception $error){
                 throw new UserException("Nepodařilo se změnit uživatele kvůli chybě databáze!", 20301, $error);
             }
                 return true;
         }
 
-
+        
         /** 
          * funkce zjistí zda byli všechny údaje do tabulky uživatelé zadané správně,
          * a případně je upravý tak aby byly.
@@ -98,32 +99,31 @@
             //Proměnná ukazuje je li vše ok.
             $ok = true;
             //Zvalidujeme uživatelské jméno a uložíme do pole.
-            $user["user"] = $validator->userValidation(); 
+            $user["user_name"] = $validator->userNameValidation(); 
             //Pokud se nejedná o update uživatele, kde je heslo prázdné(nechceme ho měnit).
             if(!($update && $_POST["password"] == "")){
                 $user["password"] = $validator->passwordValidation();
                 $validator->passwordAgainValidation($user["password"]);
                 //Zahashujeme heslo
+                
                 $user["password"] = $this->getHash($user["password"]);
             }else{
                 $validator->addFormMessage("password", "", TypeOfFormMessage::EMPTY);
                 $validator->addFormMessage("password_again", "", TypeOfFormMessage::EMPTY);
             }
             
-            //Ciklus projde pole uživatel a pokud narazí na false(tedy chybně zvalidováno) změní $good na false; 
+            //Ciklus projde pole uživatel a pokud narazí na false(tedy chybně zvalidováno) vrátí false; 
             foreach($user as $passed)
             {
                 if (!$passed){
-                    $ok = false;
+                    return false;
                 }
             }
-            //když je vše ok vrátí pole připravené pro vložení do databáze.
+    
+            //Vrátíme pole zvalidovaných dat.
+            return $user;  
             
             
-            if($ok) return $user;  
-            
-            //jinak vrátí false;
-            else return false;
         }
 
         /**
@@ -133,17 +133,19 @@
         public function logIn(string $name, string $password) : void
         {
             try{
-            $user = Mysql::oneRow('
-                SELECT users_id, users.user, password, admin, persons_id
+                $user = Mysql::oneRow('
+                SELECT users_id, user_name, password, admin, persons_id
                 FROM persons JOIN users
-                ON persons.user = users_id
-                WHERE users.user = ?
-            ', array($name));
+                ON user = users_id
+                WHERE user_name = ?
+                ', array($name));
             }catch(Exception $error){
-                throw new UserException('Neplatné jméno nebo heslo.',141);
+                throw new UserException('Přihlášení se nezdařilo kvůli chybě na naší straně.',20401);
             }
+            
             if (!$user || !password_verify($password,$user['password']))
-                throw new UserException('Neplatné jméno nebo heslo.',142);
+                throw new UserException('Neplatné jméno nebo heslo.',20402);
+            echo $user["users_id"];    
             $_SESSION['user'] = $user;
         }
 
@@ -158,13 +160,20 @@
         /**
          * Vrátí aktuálně přihlášeného uživatele
          */
-        public function getUser() : ?array
+        public function getLoggedUser() : ?array
         {
             if (isset($_SESSION['user']))
                 return $_SESSION['user'];
             return null;
         }
 
-        
-        
+        public function getUser($id, ...$columns ){ 
+            $columns=implode(", ", $columns);
+            return Mysql::oneRow(
+                "SELECT ".$columns." FROM users 
+            WHERE users_id = ?", 
+            array($id),
+            PDO::FETCH_ASSOC
+        );
+        }
     }

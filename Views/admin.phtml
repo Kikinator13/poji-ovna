@@ -1,5 +1,5 @@
-<div class="container text-center users">
-    <div class="row user-head-row d-none d-md-flex">
+<div class="container-fluid text-center users">
+    <div class="row user-head-row d-none d-md-flex" id="user-head-row">
         <div class="col-md-2 th">
             JMÉNO
         </div>
@@ -7,10 +7,10 @@
             PŘÍJMENÍ
         </div>
         <div class="col-md-2 th">
-            Ulice a číslo
+            ULICE A ČÍSLO
         </div>
         <div class="col-md-2 th">
-            Město
+            MĚSTO
         </div>
         <div class="col-md-2 th">
             PSČ
@@ -21,7 +21,7 @@
     </div>
     <?php foreach ($persons as $person) : ?>
         <div class="row user-row mt-md-0 mt-2">
-            
+
 
             <div class="d-md-none col-6 th">
                 <strong class="align-middle">JMÉNO:</strong>
@@ -46,7 +46,7 @@
             </div>
             <div class="col-6 col-md-2 td">
 
-                <?= $person["street"] . " " . $person["building_identification_number"] . "/" . $person["house_number"] ?>
+                <?= $person["street_and_number"] ?>
 
             </div>
 
@@ -69,14 +69,14 @@
             </div>
 
 
-            
+
             <div class="d-md-none col-6 th">
                 <strong class="">AKCE:</strong>
             </div>
             <div class="col-6 col-md-2 td action">
                 <a href="profile/<?= $person["persons_id"] ?>">Detail</a>
                 <a href="register/update/<?= $person["persons_id"] ?>"><img class="icon" src="img/pen.png" alt="editovat"></a>
-                <a href="register/delete/<?= $person["persons_id"] ?>"><img class="icon" src="img/cross.png" alt="odstranit"></a>
+                <a href="register/delete/<?= $person["persons_id"] ?>" onClick="return confirm('Jste si jistý, že chcete odstranit uživatele<?=$person["first_name"]?> <?=$person["last_name"]?>')"><img class="icon" src="img/cross.png" alt="odstranit"></a>
             </div>
 
         </div>
@@ -85,14 +85,17 @@
     <nav aria-label="stránkování">
         <ul class="pagination justify-content-center ">
             <?php foreach ($pages as $page) : ?>
-                    <li class="page-item <?= $page["class"] ?>">
-                        <a href="<?=$page["url"]?>" class="page-link" tabindex = "<?= $page["tabindex"] ?>">
-                            <?=$page["label"]?> 
-                        </a>
-                    </li>
-                
+                <li class="page-item <?= $page["class"] ?>">
+                    <a href="<?= $page["url"] ?>" class="page-link" tabindex="<?= $page["tabindex"] ?>">
+                        <?= $page["label"] ?>
+                    </a>
+                </li>
+
             <?php endforeach; ?>
         </ul>
     </nav>
 
 </div>
+
+<script src="../scripts/sort.js"></script>
+<script src="../scripts/check.js"></script>

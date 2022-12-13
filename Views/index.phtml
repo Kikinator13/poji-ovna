@@ -30,12 +30,12 @@
                     <div class="dropdown-menu dropdown-menu-dark dropdown-menu-end p-3 text-right">
                         <form method="POST" action="login" novalidate="novalidate">
                             <div class="mb-1">
-                                <label for="name" class="text-white form-label">uživatelské jméno:</label>
-                                <input type="text" name="name" id="name" class="form-control">
+                                <label for="user_name" class="text-white form-label">uživatelské jméno:</label>
+                                <input type="text" name="user_name" id="user_name" class="form-control">
                             </div>
                             <div class="mb-1">
                                 <label for="password" class="text-white form-label">heslo:</label>
-                                <input type="password" id="password" name="password" class="form-control">
+                                <input type="password" id="password" name="password" class="mb-2 form-control">
                             </div>
                             <button type="submit" class="btn btn-sm btn-primary">Přihlásit</button>
                         </form>
@@ -43,12 +43,12 @@
                 </div>
 
             <?php else : ?>
-                <div class="order-md-last ms-auto me-2 dropdown">
+                <div class="dropdown order-md-last ms-auto me-2">
                     <button data-bs-toggle="dropdown" type="button" class="btn btn-dark" aria-expanded="false">
-                        <span class="align-middle d-none d-md-inline me-1"><?= $user["user"] ?></span>
+                        <span class="align-middle d-none d-md-inline me-1"><?= $user["user_name"] ?></span>
                         <img class="menu-icon" src="img/user.png" alt="">
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                    <ul class="text-center dropdown-menu dropdown-menu-dark dropdown-menu-end">
                         <li><a href="profile/<?= $user["persons_id"] ?>" class="dropdown-item">profil</a></li>
                         <li><a href="login/logout" class="dropdown-item">odhlásit</a></li>
                         </li>
@@ -79,22 +79,26 @@
         </div>
 
     </nav>
+    
+    <div class="messages" id ="messages">
+        <!-- výpis zpráv -->
+        <?php foreach ($messages as $message) : ?>
+            <p class="<?= $message["type"]->name ?>">
+                <strong>
+                    <?= $message["type"]->value ?>
+                </strong>
+                <?= $message["text"] ?>
+            </p>
+        <?php endforeach ?>
+    </div>
 
-
-    <!-- výpis zpráv -->
-    <?php foreach ($messages as $message) : ?>
-        <p class="<?= $message["type"]->name ?>">
-            <strong>
-                <?= $message["type"]->value ?>
-            </strong><?= $message["text"] ?>
-        </p>
-    <?php endforeach ?>
 
     <main>
+        
         <?php $this->controller->writeView(); ?>
     </main>
 
-    <footer class = "bg-dark p-2 text-white text-center">
+    <footer class="bg-dark p-2 text-white text-center">
         <p>
             Copyright © 2022 Martin Kikta
         </p>

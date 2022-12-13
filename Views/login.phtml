@@ -3,8 +3,8 @@
     <form method="POST" novalidate="novalidate" class="text-center">
 
         <div class="form-floating mb-3">
-            <input type="text" name="name" id="name" class="form-control " placeholder="uživatelské jméno">
-            <label for="name" class="form-label">uživatelské jméno:</label>
+            <input type="text" name="user_name" id="user_name" class="form-control " value="<?=$_POST["user_name"]?>" placeholder="uživatelské jméno">
+            <label for="user_name" class="form-label">uživatelské jméno:</label>
         </div>
         <div class="form-floating mb-3">
             <input type="password" id="password" name="password" class="form-control" placeholder="heslo:">
