@@ -31,7 +31,7 @@ class RegisterController extends Controller
                 //Pokud chce uživatel vytvořit i účet
                 if (isset($_POST["want_account"])) {
                     $user = $this->userManager->userValidation($this->validator);
-                }else{
+                } else {
                     $user = true;
                 }
                 //Pokud updatujeme uživatele.
@@ -42,22 +42,35 @@ class RegisterController extends Controller
                 //Ve formuláři je totiž mít ebudeme protože update provádí jedině přihlášený admin.
                 $captcha = true;
                 $agreement = true;
-                //Díky druhému parametru bude funkce ignorovat, když je prázdné heslo, protože ho měnit nechceme.
-                
-                $user = $this->userManager->userValidation($this->validator, true);
-                
+                //Pokud je zaškrtnuto že chceme něco dělat z uživatelským účtem.
+                if (isset($_POST["want_account"])) {
+                    //Zjistíme jestli uživatel existuje. Buď dostaneme jeho číslo nebo null.
+                    $person=$this->personManager->getPerson($_POST["person_id"], "user");
+                    //Pokud editovaná osoba již má účet nemusí být vyplněno heslo (Nemusí ho chtít měnit. To zajití druhý parametr nastavený na true).
+                    if($person["user"]){
+                        //Díky druhému parametru bude funkce ignorovat, když je prázdné heslo, protože ho měnit nechceme.
+                        $user = $this->userManager->userValidation($this->validator, true);
+                    //Pokud uživatel neexistuje.
+                    } else {
+                        //Zvalidujeme i s heslem(druhý parametr je nastaven defaultně na false).
+                        $user = $this->userManager->userValidation($this->validator);
+                    }
+                //Pokud s uživatelským účtem nic dělat nechceme.
+                }else{
+                    //Nastavíme $user na true aby prošel kontrolou poté ho musíme změnit na false.
+                    $user=true;
+                }
             }
             $contact = $this->contactManager->contactValidation($this->validator);
             $address = $this->addressManager->addressValidation($this->validator);
             $person = $this->personManager->personValidation($this->validator);
 
             //Pokud jsou všechna data v pořádku.
-            if ($captcha && $agreement && ($user || !isset($_POST["want_account"])) && $address && $person && $contact) {
-               
+            if ($captcha && $agreement && $user && $address && $person && $contact) {
+                //Pokud z účetem nic neděláme vyčistíme všechny data o uživateli.
                 if (!isset($_POST["want_account"])) {
-                    
+                    //$user nastavíme na false a zároveň všechny proměnné zobrazované ve formuláři vyprázdníme.
                     $user = $this->userClear();
-                    
                 }
 
                 //Pokud updatujeme.
@@ -127,7 +140,7 @@ class RegisterController extends Controller
             //Zahájení transakce aby byly ovlivněny všechny tabulky nebo žádná.
             Mysql::startTransaction();
             //pokud chceme vytvořit i uživatelský účet, vložíme uživatele do databáze.
-           
+
             if ($user) {
                 $userId = $userManager->addUser($user, $validator);
             }
@@ -169,7 +182,7 @@ class RegisterController extends Controller
      */
     public function delete(int $personId): array
     {
-        
+
         $this->userVerify(true);
         $userManager = $this->userManager;
         $personManager = $this->personManager;
@@ -183,21 +196,21 @@ class RegisterController extends Controller
                     FROM persons WHERE persons_id = ?", array($personId));
 
             $personManager->deletePerson($personId);
-            if(isset($person["user"]))
+            if (isset($person["user"]))
                 $userManager->deleteUser($person["user"]);
-            
+
             $contactManager->deleteContact($person["contact"]);
-            $personOnAddress=MYSQL::oneValue("SELECT count(*) FROM addresses WHERE addresses_id = ?", array($person["address"]));
-            if($personOnAddress==1)
+            $personOnAddress = MYSQL::oneValue("SELECT count(*) FROM addresses WHERE addresses_id = ?", array($person["address"]));
+            if ($personOnAddress == 1)
                 $addressManager->deleteAddress($person["address"]);
-            
-            
+
+
             Mysql::commit();
         } catch (Exception $error) {
             $this->addMessage($error->getMessage() . "Nepodařilo se odstranit záznam! Chyba je pravděpodobně na naší straně.", TypeOfMessage::ERROR);
             $this->redirect("admin");
         }
-        $this->addmessage("Uživatel " . $person["first_name"] . " " . $person["last_name"] . " s přezdívkou " . $person["user_name"] . " byl úspěšně smazán", TypeOfMessage::SUCCESS);
+        $this->addmessage("Uživatel " . $person["first_name"] . " " . $person["last_name"] . " byl úspěšně smazán", TypeOfMessage::SUCCESS);
         $this->redirect("admin");
     }
 
@@ -217,14 +230,22 @@ class RegisterController extends Controller
                 FROM persons WHERE persons_id = ?",
                 array(
                     $_POST["person_id"]
-                    )
-                );
-            //Pokud bylo zaškrtnuto, že účet chceme.
-            if($user){
-                //Validujeme údaje
-                $user = $userManager->userValidation($this->validator);
-                $userManager->addUser($user, $this->validator);
-                $person["user"]=MYSQL::lastId();
+                )
+            );
+
+            //Pokud bylo zaškrtnuto, že chceme vytvořit účet.
+            if ($user) {
+                //Pokud už existuje updatujeme ho
+                if ($id["user"]) {
+                    $userManager->updateUser($user, $id["user"]);
+                //Když neexistuje Zaregistrujeme ho
+                } else {
+                        $userManager->addUser($user, $this->validator);
+                        $person["user"] = MYSQL::lastId();
+                }
+            //Pokud účet existuje ale tlačítko účtu je odškrtnuté účet smažeme.
+            } else if ($id["user"]) {
+                $userManager->deleteUser($id["user"]);
             }
             //updatujeme osobu
             $personManager->updatePerson($person, $_POST["person_id"]);
@@ -233,13 +254,11 @@ class RegisterController extends Controller
             $contactManager->updateContact($contact, $id["contact"]);
 
             $personManager->updateAddress($address, $_POST["person_id"]);
-            //Uživatel se updatuje pouze máli editovná osoba uživatelský účet. 
-            if (!$id["user"]) {
-                $userManager->updateUser($user, $id["user"]);
-            }
+            //Uživatel se updatuje pouze má-li editovná osoba uživatelský účet. 
+
             Mysql::commit();
         } catch (Exception $error) {
-            $this->addMessage($error->getCode() . $error->getPrevious()->getMessage() . " Nepodařilo se upravit záznam! Chyba je pravděpodobně na naší straně.  ", TypeOfMessage::ERROR);
+            $this->addMessage("Nepodařilo se upravit záznam! Chyba je pravděpodobně na naší straně.  ", TypeOfMessage::ERROR);
             $this->redirect("admin");
         }
         $this->addmessage("Záznam byl upraven!", TypeOfMessage::SUCCESS);
@@ -294,7 +313,7 @@ class RegisterController extends Controller
                 $this->data['form_messages'] = $this->validator->getFormMessages();
 
                 break;
-            //Pokud registrujeme nového uživatele.
+                //Pokud registrujeme nového uživatele.
             case "registration":
 
                 // Hlavička stránky
@@ -304,7 +323,7 @@ class RegisterController extends Controller
                 $this->data["area_codes"] = $this->areaCodeManager->getAreaCodes();
                 $this->data["states"] = $this->stateManager->getStates();
                 $this->head['title'] = 'Registrace';
-                
+
                 $this->data["formType"] = "Registrace";
                 $this->data['form_messages'] = $this->validator->getFormMessages();
                 break;

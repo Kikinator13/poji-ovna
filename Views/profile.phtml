@@ -1,4 +1,3 @@
-
 <div class="profile-table container">
     <h2 class="text-white text-center">Profil uživatele <?= $person["first_name"] ?> <?= $person["last_name"] ?> </h2>
     <div class="row user-row bg-dark">
@@ -9,7 +8,7 @@
                     <?= $person["first_name"] ?>
                 </span>
             </div>
-            <a href="javascript: openForm('first_name-container')" class="align-self-end ms-auto <?=$edit["first_name"]?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+            <a href="javascript: openForm('first_name-container')" class="align-self-end ms-auto <?= $edit["first_name"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
         </div>
         <div class="col-6 p-0 td d-none" id="first_name-container-form">
             <form class="row g-0 w-100">
@@ -24,8 +23,8 @@
                 </div>
             </form>
         </div>
-            
-        
+
+
 
         <div class="th col-6">Příjmení:</div>
         <div class="td col-6" id="last_name-container">
@@ -34,7 +33,7 @@
                     <?= $person["last_name"] ?>
                 </span>
             </div>
-            <a href="javascript: openForm('last_name-container')" class="align-self-end ms-auto <?=$edit["last_name"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+            <a href="javascript: openForm('last_name-container')" class="align-self-end ms-auto <?= $edit["last_name"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
         </div>
         <div class="col-6 p-0 td d-none" id="last_name-container-form">
             <form class="row g-0 w-100">
@@ -50,20 +49,50 @@
             </form>
         </div>
 
-        <div class="th col-6">Uživatelské jméno:</div>
+
+
+        <div class="th col-6" id="account-th">Účet:</div>
+        <div class="td col-6" id = "account-container">
+            <a href="javascript: openForm('account-container')" class="btn btn-dark w-100">Založit uživatelský účet</a>
+        </div>
+        <div class="col-6 p-0 td" id="account-container-form">
+            <form class="row g-0 w-100 g-1">
+
+                <div class="col-12">
+                    <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Uživatelské jméno:" value="" aria-label="Uživatelské jméno:">
+                    <div class="invalid-feedback" id="user_name-feedback">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <input type="password" class="form-control" id="create-password" name="password" placeholder="Nové heslo:" value="" aria-label="Heslo nové:">
+                    <div class="invalid-feedback" id="password-feedback">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <input type="password" class="form-control" id="create-password_again" name="password_again" placeholder="Heslo znovu:" value="" aria-label="Heslo znovu:">
+                    <div class="invalid-feedback" id="password_again-feedback">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <input type="submit" class="btn btn-dark w-100" value="Založit uživatelský účet">
+                </div>
+            </form>
+        </div>
+
+        <div class="th col-6" id="user_name-th">Uživatelské jméno:</div>
         <div class="td col-6" id="user_name-container">
             <div>
                 <span id="user_name-span">
                     <?= $person["user_name"] ?>
                 </span>
             </div>
-            <a href="javascript: openForm('user_name-container')" class="align-self-end ms-auto <?=$edit["user_name"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+            <a href="javascript: openForm('user_name-container')" class="align-self-end ms-auto <?= $edit["user_name"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
         </div>
-        <div class="col-6 p-0 td d-none" id="user_name-container-form">
+        <div class="col-6 p-0 td" id="user_name-container-form">
             <form class="row g-0 w-100">
                 <div class="col-8">
                     <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Uživatelské jméno:" value="<?= $person["user_name"] ?>" aria-label="Uživatelské jméno">
-                    <div class="invalid-feedback" id="first_name-feedback">
+                    <div class="invalid-feedback" id="user_name-feedback">
 
                     </div>
                 </div>
@@ -72,26 +101,36 @@
                 </div>
             </form>
         </div>
-        <div class="th col-6">Heslo:</div>
-        <div class="td col-6" id="user_name-container">
-            
-                <a href="javascript: openForm('password-container')" class="btn btn-dark w-100">změnit heslo</a>
-                
-            
-        </div>
-        <div class="col-6 p-0 td d-none" id="user_name-container-form">
-            <form class="row g-0 w-100">
-                <div class="col-8">
-                    <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Uživatelské jméno:" value="<?= $person["user_name"] ?>" aria-label="Uživatelské jméno">
-                    <div class="invalid-feedback" id="first_name-feedback">
+        <div class="th col-6"id="password-th">Heslo:</div>
+        <div class="td col-6" id="password-container">
+            <a href="javascript: openForm('password-container')" class="btn btn-dark w-100">Změnit heslo</a>
 
+        </div>
+        <div class="col-6 p-0 td" id="password-container-form">
+            <form class="row g-0 w-100 g-1">
+
+                <div class="col-12">
+                    <input type="password" class="form-control" id="password_old" name="password_old" placeholder="Staré heslo:" value="" aria-label="Staré heslo:">
+                    <div class="invalid-feedback" id="password_old-feedback">
                     </div>
                 </div>
-                <div class="col-4">
-                    <input type="submit" class="btn btn-dark w-100" value="změnit">
+                <div class="col-12">
+                    <input type="password" class="form-control" id="update-password" name="password" placeholder="Nové hesloeslo:" value="" aria-label="Heslo nové:">
+                    <div class="invalid-feedback" id="password-feedback">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <input type="password" class="form-control" id="update-password_again" name="password_again" placeholder="Heslo znovu:" value="" aria-label="Heslo znovu:">
+                    <div class="invalid-feedback" id="password_again-feedback">
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <input type="submit" class="btn btn-dark w-100" value="Změnit heslo">
                 </div>
             </form>
         </div>
+
         <div class="th col-6">adresa:</div>
         <div class="td col-6 m-0" id="address">
             <address class="mb-0">
@@ -105,7 +144,7 @@
                 <span id="state-span" data-index="<?= $person["state"] ?>"><?= $person["state_name"] ?></span>
 
             </address>
-            <a href="javascript: openForm('address')" class="align-self-end ms-auto <?=$edit["address"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+            <a href="javascript: openForm('address')" class="align-self-end ms-auto <?= $edit["address"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
         </div>
         <div class="col-6 p-1 td d-none" id="address-form">
             <form class="row g-1">
@@ -148,7 +187,7 @@
                     <?= $person["mail"] ?>
                 </span>
             </div>
-            <a href="javascript: openForm('mail-container')" class="align-self-end ms-auto <?=$edit["mail"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+            <a href="javascript: openForm('mail-container')" class="align-self-end ms-auto <?= $edit["mail"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
         </div>
         <div class="col-6 p-0 td d-none" id="mail-container-form">
             <form class="row g-0 w-100">
@@ -173,7 +212,7 @@
                     <?= $person["phone"] ?>
                 </span>
             </div>
-            <a href="javascript: openForm('phone-container')" class="align-self-end ms-auto <?=$edit["phone"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+            <a href="javascript: openForm('phone-container')" class="align-self-end ms-auto <?= $edit["phone"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
         </div>
         <div class="col-6 p-0 td d-none" id="phone-container-form">
             <form class="g-1 row w-100" method="POST">
@@ -203,7 +242,7 @@
                     <?= $person["national_id_number"] ?>
                 </span>
             </div>
-            <a href="javascript: openForm('national_id_number-container')" class="align-self-end ms-auto <?=$edit["national_id_number"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+            <a href="javascript: openForm('national_id_number-container')" class="align-self-end ms-auto <?= $edit["national_id_number"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
         </div>
         <div class="col-6 p-0 td d-none" id="national_id_number-container-form">
             <form class="row g-0 w-100">
@@ -225,12 +264,12 @@
                     <?= $person["identity_card_number"] ?>
                 </span>
             </div>
-            <a href="javascript: openForm('identity_card_number-container')" class="align-self-end ms-auto <?=$edit["identity_card_number"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
+            <a href="javascript: openForm('identity_card_number-container')" class="align-self-end ms-auto <?= $edit["identity_card_number"] ?>"><img src="img/pen.png" alt="editovat" class="icon"></a>
         </div>
         <div class="col-6 p-0 td d-none" id="identity_card_number-container-form">
             <form class="row g-0 w-100">
                 <div class="col-8">
-                    <input type="text" class="form-control" id="identity_card_number" name="national_id_number" placeholder="Rodné číslo:" value="<?= $person["national_id_number"] ?>" aria-label="Rodné číslo">
+                    <input type="text" class="form-control" id="identity_card_number" name="national_id_number" placeholder="Rodné číslo:" value="<?= $person["identity_card_number"] ?>" aria-label="Číslo občanského průkazu">
                     <div class="invalid-feedback" id="identity_card_number-feedback">
 
                     </div>
@@ -248,4 +287,5 @@
 
 </div>
 <input type="hidden" id="id" value="<?= $person["persons_id"] ?>">
+
 <script src="../scripts/AjaxUpdater.js"></script>

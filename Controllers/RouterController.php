@@ -9,7 +9,7 @@
         {
             $devidedPath = $this->parseURL($parameters[0]);
             if (empty($devidedPath[0]))
-                $this->redirect('article/hlavni-stranka');
+                $this->redirect('login');
             $classOfController = $this->dashesToCamelCase(array_shift($devidedPath)) . 'Controller';
             if (file_exists('Controllers/' . $classOfController . '.php'))
                 $this->controller = new $classOfController;

@@ -78,10 +78,10 @@
             if (!$user || ($authorization && (!($user['admin'] || $authorization === $user["persons_id"]))))
             {
                 if(isset($_POST["ajax"])){
-                    $message["message"]["text"]="Nedostatečná oprávnění!";
-                    $message["message"]["type"]="ERROR";
-                    $message["errors"]=array();
-                    echo json_encode($message);
+                    $response["message"]["text"]="Nedostatečná oprávnění!";
+                    $response["message"]["type"]="ERROR";
+                    $response["errors"]=array();
+                    echo json_encode($response);
                     exit;
                 }
                 $this->addMessage('Nedostatečná oprávnění.');

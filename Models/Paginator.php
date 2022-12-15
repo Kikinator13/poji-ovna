@@ -7,62 +7,11 @@
         private int $to;
         private int $limit;
         private string $url;
-        public function __construct(string $url,int $totalItems, int $from=0, int $to=0){
+        public function __construct(string $url,int $totalItems, int $from=0, int $limit=10){
             $this->url = $url;
-            
-            
-            //pokud je do menší než do tak je prohodíme
-            if($to < $from){
-                $auxiliary = $from;
-                $from = $to;
-                $to = $auxiliary;
-            }                        
-            $this->to = $to;
-            $this->limit = $to - $from+1;
-            
-            if(!is_numeric($from)){
-                $from=0;
-            }
-            //$from=($from<0)?($from+$this->limit):$from;
-            $this->from = $from;            
-            ($from<0-$this->limit)?0:$from;
-            ($to<0)?0:$to;
-            if($from<0) $from += $this->limit;
-            $this->totalItems = $totalItems;
-            echo "from: ".$from."<br>";
-            $page1=$from % $this->limit;
-            echo "1. strana : ".$page1."<br>";
-            echo "limit: ".$this->limit."<br>";
-            echo "položek: ".$this->totalItems."<br>";
-            $totalPages=ceil($totalItems / $this->limit);
-            $modulo = $totalItems % $this->limit;
-            echo "Položek navíc:".$modulo."<br>";
-            if($modulo != $page1)
-                    $totalPages++;
-            
-    
-
-            $this->totalPages=$totalPages;
-            echo "<br>počet stran: ". $totalPages;
-            /*
-            echo "Počet stránek bez první a poslední:". $totalPages=floor($totalItems / $this->limit);
-            echo "<br>položek na první straně: ".$startOverflow = ($this->from) % $this->limit;
-            echo "<br>položek na poslední straně: ".$endOverflow = $this->totalItems-($this->limit*$totalPages)-$startOverflow;
-            //($startOverflow > 0 )? $startOverflow:0;
-            //($endOverflow > 0 )? $startOverflow:0;
-            echo "<br>Počáteční přetečení: ".$startOverflow."<bt> Přetečení na konci:". $endOverflow.
-            "<br> limit:". $this->limit."<br> počet položek:". $totalItems."<br> počet položek / limit: ".($this->totalItems / $this->limit);
-            
-            $this->totalPages = ceil($totalItems/$this->limit);
-            echo "<br>podmínka: ". $endOverflow - $startOverflow;
-            if ($endOverflow + $startOverflow==0){
-                echo"<br> stránek celkem: ".$this->totalPages;
-                $this->totalPages++;
-            }
-            echo"<br> stránek celkem: ".$this->totalPages;
-                
-           */
-            
+            $this->totalPages=($limit==0) ? 1 : $totalItems/$limit+1;
+            $this->from=$from;
+            $this->limit=$limit;
         }
        
         public function GeneratePagination(int $radius) : array
@@ -175,35 +124,15 @@
         private function generateUrlParameters(int $page) : string
         {
             $limit = $this->limit;
+            $from = $this->from;
             $url = $this->url;
-            $modulo = $this->from % $limit;
-            if($modulo==0){
-                $from = $page * $limit-$limit;
-            }else{
-                if($this->from<0){
-                    $from = $page * $limit-$limit + $modulo;
-                }else{
-                    $from = $page * $limit-2*$limit + $modulo;
-                }
-            }
-            $to = $from + $limit-1;
-                        
-            $url = $url."/".$from."/".$to;
+            $from = $limit * ($page - 1); 
+            $url .= "/".$from."/".$limit;
             return $url; 
         }
         public function getCurrent() : int 
         {  
-           return ceil($this->from/$this->limit)+1;
+           return ($this->limit==0) ? 1 : ceil($this->from/$this->limit)+1;
         }
-        public function getLimit() : int
-        {      
-            $from = ($this->from<0)?0:$this->from;
-            $to = ($this->to>$this->totalItems)?$this->totalItems:$this->to;
-            $limit=$to-$from+1;
-            return $limit;
-        }
-        public function getFrom() : int
-        {
-            return ($this->from<0)?0:$this->from;
-        }
+                
     }

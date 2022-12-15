@@ -44,6 +44,8 @@ h2{
     background-size: 2em;
     background-position: 1em, top;
     padding-left: 4em;
+    cursor: hand; /*pro ie*/
+    cursor: pointer;
 }
 .ERROR {
     background-color: #ff7777;
@@ -55,8 +57,10 @@ h2{
     background-image: url(img/error_icon.png);
     background-repeat: no-repeat;
     background-size: 2em;
-    background-position: 1em,center;
+    background-position: 1em, top;
     padding-left: 4em;
+    cursor: hand; /*pro ie*/
+    cursor: pointer;
 }
 .WARNING {
     background-color: #ffff77;
@@ -68,8 +72,10 @@ h2{
     background-image: url(img/note_icon.png);
     background-repeat: no-repeat;
     background-size: 2em;
-    background-position: 1em,center;
+    background-position: 1em, top;
     padding-left: 4em;
+    cursor: hand; /*pro ie*/
+    cursor: pointer;
 }
 .INFO {
     background-color: #7777ff;
@@ -81,8 +87,10 @@ h2{
     background-image: url(img/info_icon.png);
     background-repeat: no-repeat;
     background-size: 2em;
-    background-position: 1em,center;
-    padding-left: 4em;   
+    background-position: 1em, top;
+    padding-left: 4em;
+    cursor: hand; /*pro ie*/
+    cursor: pointer;   
 }
 .icon{
     height: 1rem;
@@ -98,9 +106,6 @@ h2{
     height: 1.5rem;
     font-size: 1rem;
 }
-
-
-
 
 #address-form{
     display: none;
@@ -253,6 +258,7 @@ h2{
     .users .user-row:hover .td{
         background-color: #212529;
         color: #ffffff;
+        
     }                 
     .profile-table{
         width: 75%;

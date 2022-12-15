@@ -5,8 +5,8 @@
     <base href="/pojistovna" />
     <meta charset="UTF-8" />
     <title><?= $title ?></title>
-    <meta name="description" content="<?= $popis ?>" />
-    <meta name="keywords" content="<?= $klicova_slova ?>" />
+    <meta name="description" content="<?= $description ?>" />
+    <meta name="keywords" content="<?= $keyWords ?>" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap-grid.css" type="text/css" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap-reboot.css" type="text/css" />
@@ -19,7 +19,7 @@
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="pojisteni">Pojištěnice</a>
+            <a class="navbar-brand" href="pojisteni">Pojišťovna</a>
             <?php if (!$user) : ?>
                 <!--když uživatel není příhlášen (místo pole obsahuje null)-->
                 <div class="order-md-last ms-auto me-2 dropdown">
@@ -50,6 +50,9 @@
                     </button>
                     <ul class="text-center dropdown-menu dropdown-menu-dark dropdown-menu-end">
                         <li><a href="profile/<?= $user["persons_id"] ?>" class="dropdown-item">profil</a></li>
+                        <?php if ($user["admin"]) : ?>
+                            <li><a href="admin" class="dropdown-item">administrace</a></li>
+                        <?php endif; ?>
                         <li><a href="login/logout" class="dropdown-item">odhlásit</a></li>
                         </li>
                 </div>
@@ -63,13 +66,13 @@
             <div class="collapse navbar-collapse" id="navigation">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <a href="article/uvod" class="nav-link">Úvod</a>
+                        <a href="" class="nav-link">link</a>
                     </li>
                     <li class="nav-item">
-                        <a href="article" class="nav-link">Články</a>
+                        <a href="" class="nav-link">link</a>
                     </li>
                     <li class="nav-item">
-                        <a href="contact" class="nav-link">Kontakt</a>
+                        <a href="" class="nav-link">link</a>
                     </li>
 
 
@@ -83,7 +86,7 @@
     <div class="messages" id ="messages">
         <!-- výpis zpráv -->
         <?php foreach ($messages as $message) : ?>
-            <p class="<?= $message["type"]->name ?>">
+            <p class="<?= $message["type"]->name ?>" onClick = "closser(this);">
                 <strong>
                     <?= $message["type"]->value ?>
                 </strong>
@@ -105,6 +108,8 @@
     </footer>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script> -->
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../scripts/Closser.js"></script>
 </body>
 
 </html>
+

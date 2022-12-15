@@ -266,6 +266,21 @@
                 return $user;
             }
         }
+        public function passwordOldValidation($oldPassword) : ?bool
+        {
+        
+             
+            $password = trim($_POST["password_old"]);
+            
+        
+            if(password_verify($password, $oldPassword)){
+                $this->addFormMessage('password_old','Ok', TypeOfFormMessage::VALID);    
+                return true;
+            }else{
+                $this->addFormMessage('password_old','Staré heslo není vyplněno správně!', TypeOfFormMessage::INVALID);
+                return null;
+            }
+        }
         public function passwordValidation() : ?string
         {
             $password = trim($_POST["password"]);
@@ -280,10 +295,13 @@
                 return null;
             }
         }
-        public function passwordAgainValidation($password) : ?string
+        public function passwordAgainValidation(null|string $password) : ?string
         {
             $password_again = trim($_POST["password_again"]);
             //Je kontrolní pole shodné s polem heslo?
+            $userManager= new UserManager();
+            
+            
             if ($password_again === $password){
                 $this->addFormMessage('password_again','Ok', TypeOfFormMessage::VALID);
                 return $password_again;

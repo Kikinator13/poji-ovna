@@ -20,9 +20,9 @@ class ProfileController extends Controller
         $this->stateManager = new StateManager();
         $this->userManager = new UserManager();
         $this->validator = new Validator();
-        
+
         //Pokud URL obsahuje id. 
-        
+
         if (isset($parameters[0]) && is_numeric($parameters[0])) {
             //Zjistíme id osoby. 
             $personId = $parameters[0];
@@ -35,40 +35,39 @@ class ProfileController extends Controller
             $this->redirect("chyba");
         }
         //Pokud byl odeslán formulář.
-        
+
         if ($_POST) {
             //Změníme adresu osoby s id $id.
             $this->edit($personId);
         }
-        
+
         //Naformátujeme PSČ.(Uděláme za třetím číslem mezeru)
-        
-        
+
+
         //nastavýme hlavičku
         $this->head["title"] = "profil uživatele" . $this->person["user"];
         //Informace o osobě předáme šabloně.
         $this->data["person"] = $this->person;
         $this->data["states"] = $this->stateManager->getStates();
         $this->data["area_codes"] = $this->areaCodeManager->getAreaCodes();
-        
+
         //Zjistíme aktuálně přihlášeného uživatele.
-        $user=$this->userManager->getLoggedUser();
+        $user = $this->userManager->getLoggedUser();
         //Zjistíme jestli je přihlášený uživatel admin.
         $admin = $user["admin"];
         //Pole určuje které položky profilu budou editovatelné uživatelem a které jen adminem.
-        $this->data["edit"]=array(
+        $this->data["edit"] = array(
             "first_name" => ($admin) ? "d-inline" : "d-none",
             "last_name" => ($admin) ? "d-inline" : "d-none",
-            "user_name" => ($this->person["user_name"]=="Klient nemá účet.") ? "d-none" : "d-inline",
+            "user_name" => ($this->person["user_name"] == "Klient nemá účet.") ? "d-none" : "d-inline",
             "address" => "d-inline",
             "mail" => "d-inline",
             "phone" => "d-inline",
             "identity_card_number" => ($admin) ? "d-inline" : "d-none",
             "national_id_number" => ($admin) ? "d-inline" : "d-none",
         );
-        
-        
-        
+
+
         //Nastavíme šablonu
         $this->view = "profile";
     }
@@ -140,7 +139,7 @@ class ProfileController extends Controller
         $this->redirect("profile/" . $personId);
         
     }*/
-        
+
         if (isset($_POST["phone"])) {
             $this->phoneUpdate();
         }
@@ -153,10 +152,7 @@ class ProfileController extends Controller
         if (isset($_POST["last_name"])) {
             $this->lastNameUpdate();
         }
-        if (isset($_POST["user_name"])) {
-            $this->userNameUpdate();
-        }
-        
+
         if (isset($_POST["street_and_number"])) {
             $this->addressUpdate();
         }
@@ -166,9 +162,15 @@ class ProfileController extends Controller
         if (isset($_POST["national_id_number"])) {
             $this->nationalIdNumberUpdate();
         }
-        
+        if (isset($_POST["user_name"]) && isset($_POST["password"])) {
+            $this->addAccount();
+        } else if (isset($_POST["password"])) {
+            $this->passwordUpdate();
+        } else if (isset($_POST["user_name"])) {
+            $this->userNameUpdate();
+        }
     }
-    
+
     public function phoneUpdate()
     {
         $this->userVerify($this->person["persons_id"]);
@@ -181,7 +183,10 @@ class ProfileController extends Controller
                 $this->contactManager->updateContact($phone, $this->person["contact"]);
             } catch (UserException $error) {
                 if (isset($_POST["ajax"])) {
-                    echo '{errors:[]}';
+                    $response["message"]["text"] = "Telefonní číslo se nepodařilo změnit!";
+                    $response["message"]["type"] = "ERROR";
+                    $response["errors"] = array();
+                    echo json_encode($$response);
                     exit;
                 }
             }
@@ -194,7 +199,10 @@ class ProfileController extends Controller
 
 
             if (isset($_POST["ajax"])) {
-                echo json_encode($phone);
+                $response["message"]["text"] = "Telefonní číslo bylo změněno!";
+                $response["message"]["type"] = "SUCCESS";
+                $response["data"] = $phone;
+                echo json_encode($response);
                 exit;
             }
             $this->addMessage("Telefonní číslo bylo změněno.", TypeOfMessage::SUCCESS);
@@ -202,6 +210,8 @@ class ProfileController extends Controller
         } else {
             //Pokud je tento controler načítán ajaxem.
             if (isset($_POST["ajax"])) {
+                $response["message"]["text"] = "Telefonní číslo se nepodařilo změnit!";
+                $response["message"]["type"] = "ERROR";
                 $response["errors"] = $this->validator->getFormMessages();
                 echo json_encode($response);
                 exit;
@@ -224,13 +234,19 @@ class ProfileController extends Controller
                 $this->contactManager->updateContact(array("mail" => $mail), $this->person["contact"]);
             } catch (UserException $error) {
                 if (isset($_POST["ajax"])) {
-                    echo '{errors:[]}';
+                    $response["message"]["text"] = "Emailovou adresu se nepodařilo změnit!";
+                    $response["message"]["type"] = "ERROR";
+                    $response["errors"] = array();
+                    echo json_encode($response);
                     exit;
                 }
             }
             $mail = $this->contactManager->getContact($this->person["contact"], "mail");
             if (isset($_POST["ajax"])) {
-                echo json_encode($mail);
+                $response["message"]["text"] = "Emailová adresa Byla změněna!";
+                $response["message"]["type"] = "SUCCESS";
+                $response["data"] = $mail;
+                echo json_encode($response);
                 exit;
             }
             $this->addMessage("E-mail byl změněn.", TypeOfMessage::SUCCESS);
@@ -238,6 +254,8 @@ class ProfileController extends Controller
         } else {
             //Pokud je tento controler načítán ajaxem.
             if (isset($_POST["ajax"])) {
+                $response["message"]["text"] = "Emailovou adresu se nepodařilo změnit!";
+                $response["message"]["type"] = "ERROR";
                 $response["errors"] = $this->validator->getFormMessages();
                 echo json_encode($response);
                 exit;
@@ -259,13 +277,19 @@ class ProfileController extends Controller
                 $this->personManager->updatePerson(array("first_name" => $firstName), $this->person["persons_id"]);
             } catch (UserException $error) {
                 if (isset($_POST["ajax"])) {
-                    echo '{errors:[]}';
+                    $response["message"]["text"] = "Křestní jméno se nepodařilo změnit!";
+                    $response["message"]["type"] = "ERROR";
+                    $response["errors"] = array();
+                    echo json_encode($response);
                     exit;
                 }
             }
             $firstName = $this->personManager->getPerson($this->person["persons_id"], "first_name");
             if (isset($_POST["ajax"])) {
-                echo json_encode($firstName);
+                $response["message"]["text"] = "Křestní jméno bylo změněno.";
+                $response["message"]["type"] = "SUCCESS";
+                $response["data"] = $firstName;
+                echo json_encode($response);
                 exit;
             }
             $this->addMessage("Křestní jméno bylo změněno", TypeOfMessage::SUCCESS);
@@ -273,6 +297,8 @@ class ProfileController extends Controller
         } else {
             //Pokud je tento controler načítán ajaxem.
             if (isset($_POST["ajax"])) {
+                $response["message"]["text"] = "Křestní jméno se nepodařilo změnit!";
+                $response["message"]["type"] = "ERROR";
                 $response["errors"] = $this->validator->getFormMessages();
                 echo json_encode($response);
                 exit;
@@ -295,13 +321,19 @@ class ProfileController extends Controller
                 $this->personManager->updatePerson(array("last_name" => $lastName), $this->person["persons_id"]);
             } catch (UserException $error) {
                 if (isset($_POST["ajax"])) {
-                    echo '{errors:[]}';
+                    $response["message"]["text"] = "Příjmení se nepodařilo změnit!";
+                    $response["message"]["type"] = "ERROR";
+                    $response["errors"] = array();
+                    echo json_encode($response);
                     exit;
                 }
             }
             $lastName = $this->personManager->getPerson($this->person["persons_id"], "last_name");
             if (isset($_POST["ajax"])) {
-                echo json_encode($lastName);
+                $response["message"]["text"] = "Příjmení bylo změněno.";
+                $response["message"]["type"] = "SUCCESS";
+                $response["data"] = $lastName;
+                echo json_encode($response);
                 exit;
             }
             $this->addMessage("Příjmení bylo změněno", TypeOfMessage::SUCCESS);
@@ -309,6 +341,8 @@ class ProfileController extends Controller
         } else {
             //Pokud je tento controler načítán ajaxem.
             if (isset($_POST["ajax"])) {
+                $response["message"]["text"] = "Příjmení se nepodařilo změnit.";
+                $response["message"]["type"] = "ERROR";
                 $response["errors"] = $this->validator->getFormMessages();
                 echo json_encode($response);
                 exit;
@@ -330,13 +364,19 @@ class ProfileController extends Controller
                 $this->userManager->updateUser(array("user_name" => $userName), $this->person["user"]);
             } catch (UserException $error) {
                 if (isset($_POST["ajax"])) {
-                    echo '{errors:[]}';
+                    $response["message"]["text"] = "Uživatelské jméno se nepodařilo změnit!";
+                    $response["message"]["type"] = "ERROR";
+                    $response["errors"] = array();
+                    echo json_encode($response);
                     exit;
                 }
             }
             $userName = $this->userManager->getUser($this->person["user"], "user_name");
             if (isset($_POST["ajax"])) {
-                echo json_encode($userName);
+                $response["message"]["text"] = "Uživatelské jméno bylo změněno.";
+                $response["message"]["type"] = "SUCCESS";
+                $response["data"] = $userName;
+                echo json_encode($response);
                 exit;
             }
             $this->addMessage("Uživatelské jméno bylo změněno", TypeOfMessage::SUCCESS);
@@ -344,12 +384,64 @@ class ProfileController extends Controller
         } else {
             //Pokud je tento controler načítán ajaxem.
             if (isset($_POST["ajax"])) {
+                $response["message"]["text"] = "Uživatelské jméno se nepodařilo změnit!";
+                $response["message"]["type"] = "ERROR";
                 $response["errors"] = $this->validator->getFormMessages();
                 echo json_encode($response);
                 exit;
             }
             //Nastavíme zprávu.
             $this->addMessage("Uživatelské jméno se nepodařilo změnit!", TypeOfMessage::SUCCESS);
+            //Přesměrujem.
+            $this->redirect("profile/" . $this->person["personsId"]);
+            //předáme šabloně zprávy o chybných formulářových polích;
+            $this->data["form_messages"] = $this->validator->getFormMessages();
+        }
+    }
+    public function passwordUpdate()
+    {
+        $this->userVerify($this->person["persons_id"]);
+        $passwordOld = $this->validator->passwordOldValidation($this->person["password"]);
+        $password = $this->validator->passwordValidation();
+        $passwordAgain = $this->validator->passwordAgainValidation($password);
+        
+        if ($passwordOld && $password && $passwordAgain) {
+            try {
+                $password = $this->userManager->getHash($password);
+                $this->userManager->updateUser(array("password" => $password), $this->person["user"]);
+            } catch (UserException $error) {
+                if (isset($_POST["ajax"])) {
+                    $response["message"]["text"] = "Heslo se nepodařilo změnit!";
+                    $response["message"]["type"] = "ERROR";
+                    $response["errors"] = array();
+                    echo json_encode($$response);
+                    exit;
+                }
+            }
+
+            if (isset($_POST["ajax"])) {
+                $response["message"]["text"] = "Heslo bylo změněno!";
+                $response["message"]["type"] = "SUCCESS";
+                $response["data"] = array("password" => "", "password_old" => "", "password_again" => "");
+                echo json_encode($response);
+                exit;
+            }
+            $this->addMessage("Heslo bylo změněno", TypeOfMessage::SUCCESS);
+            $this->redirect("profile/" . $this->person["personsId"]);
+            //Došlo li k chybě
+        } else {
+            //Pokud je tento controler načítán ajaxem.
+            if (isset($_POST["ajax"])) {
+
+                $response["message"]["text"] = "Heslo se nepodařilo změnit!";
+                $response["message"]["type"] = "ERROR";
+                $response["errors"] = $this->validator->getFormMessages();
+
+                echo json_encode($response);
+                exit;
+            }
+            //Nastavíme zprávu.
+            $this->addMessage("Heslo se nepodařilo změnit!", TypeOfMessage::SUCCESS);
             //Přesměrujem.
             $this->redirect("profile/" . $this->person["personsId"]);
             //předáme šabloně zprávy o chybných formulářových polích;
@@ -366,14 +458,20 @@ class ProfileController extends Controller
             } catch (UserException $error) {
 
                 if (isset($_POST["ajax"])) {
-                    echo '{errors:[]}';
+                    $response["message"]["text"] = "Rodné číslo se nepodařilo změnit!";
+                    $response["message"]["type"] = "ERROR";
+                    $response["errors"] = array();
+                    echo json_encode($response);
                     exit;
                 }
             }
             $nationalIdNumber = $this->personManager->getPerson($this->person["persons_id"], "national_id_number");
             $nationalIdNumber["national_id_number"] = Formater::formatNationalIdNumber($nationalIdNumber["national_id_number"]);
             if (isset($_POST["ajax"])) {
-                echo json_encode($nationalIdNumber);
+                $response["message"]["text"] = "Rodné číslo bylo změněno";
+                $response["message"]["type"] = "SUCCESS";
+                $response["data"] = $nationalIdNumber;
+                echo json_encode($response);
                 exit;
             }
             $this->addMessage("Rodné číslo bylo změněno.", TypeOfMessage::SUCCESS);
@@ -381,6 +479,8 @@ class ProfileController extends Controller
         } else {
             //Pokud je tento controler načítán ajaxem.
             if (isset($_POST["ajax"])) {
+                $response["message"]["text"] = "Rodné číslo se nepodařilo změnit!";
+                $response["message"]["type"] = "ERROR";
                 $response["errors"] = $this->validator->getFormMessages();
                 echo json_encode($response);
                 exit;
@@ -401,15 +501,21 @@ class ProfileController extends Controller
             try {
                 $this->personManager->updatePerson(array("identity_card_number" => $identityCardNumber), $this->person["persons_id"]);
             } catch (UserException $error) {
-
                 if (isset($_POST["ajax"])) {
-                    echo '{errors:[]}';
+                    $response["message"]["text"] = "Číslo občanského průkazu se nepodařilo změnit!";
+                    $response["message"]["type"] = "ERROR";
+                    $response["errors"] = array();
+                    echo json_encode($response);
                     exit;
                 }
             }
             $identityCardNumber = $this->personManager->getPerson($this->person["persons_id"], "identity_card_number");
             if (isset($_POST["ajax"])) {
-                echo json_encode($identityCardNumber);
+                $response["message"]["text"] = "Číslo občanského průkazu bylo změněno.";
+                $response["message"]["type"] = "SUCCESS";
+                $response["data"] = $identityCardNumber;
+                $response["errors"] = array();
+                echo json_encode($response);
                 exit;
             }
             $this->addMessage("Číslo občanského průkazu bylo změněno.", TypeOfMessage::SUCCESS);
@@ -417,6 +523,8 @@ class ProfileController extends Controller
         } else {
             //Pokud je tento controler načítán ajaxem.
             if (isset($_POST["ajax"])) {
+                $response["message"]["text"] = "Číslo občanského průkazu se nepodařilo změnit!";
+                $response["message"]["type"] = "ERROR";
                 $response["errors"] = $this->validator->getFormMessages();
                 echo json_encode($response);
                 exit;
@@ -432,7 +540,7 @@ class ProfileController extends Controller
     //Pokud editujeme adresu. (stačí zkontrolovat první pole, protože když tam je, jsou tam i ZIP a city)
     public function addressUpdate()
     {
-        
+
         $this->userVerify($this->person["persons_id"]);
         $address = $this->addressManager->addressValidation($this->validator);
         if ($address) {
@@ -440,7 +548,10 @@ class ProfileController extends Controller
                 $addressId = $this->personManager->updateAddress($address, $this->person["persons_id"]);
             } catch (UserException $error) {
                 if (isset($_POST["ajax"])) {
-                    echo '{errors:[]}';
+                    $response["message"]["text"] = "Adresu se nepodařilo změnit!";
+                    $response["message"]["type"] = "ERROR";
+                    $response["errors"] = array();
+                    echo json_encode($response);
                     exit;
                 }
             }
@@ -451,7 +562,11 @@ class ProfileController extends Controller
             //Pokud je tento controler načítán ajaxem.
             if (isset($_POST["ajax"])) {
                 //Změněná adresa bude v json dostupná pod klíčem address.
-                echo json_encode($address);
+                $response["message"]["text"] = "Adresa byla změněna.";
+                $response["message"]["type"] = "SUCCESS";
+                $response["data"] = $address;
+
+                echo json_encode($response);
                 exit;
             }
             $this->addMessage("Adresa byla změněna.", TypeOfMessage::SUCCESS);
@@ -459,6 +574,8 @@ class ProfileController extends Controller
         } else {
             //Pokud je tento controler načítán ajaxem.
             if (isset($_POST["ajax"])) {
+                $response["message"]["text"] = "Adresu se nepodařilo změnit!";
+                $response["message"]["type"] = "ERROR";
                 $response["errors"] = $this->validator->getFormMessages();
                 echo json_encode($response);
                 exit;
@@ -472,6 +589,59 @@ class ProfileController extends Controller
         }
     }
 
+    public function addAccount()
+    {
+        $this->userVerify(true);
+        $userName = $this->validator->userNameValidation();
+        $password = $this->validator->passwordValidation();
+        $passwordAgain = $this->validator->passwordAgainValidation($password);
+
+        if ($userName && $password && $passwordAgain) {
+            try {
+                $password = $this->userManager->getHash($password);
+                $this->userManager->addUser(array("user_name" => $userName, "password" => $password), $this->validator);
+                $userId=Mysql::lastId();
+                $this->personManager->updatePerson(array("user" => Mysql::lastId()), $this->person["persons_id"]);
+            } catch (UserException $error) {
+
+                if (isset($_POST["ajax"])) {
+                    $response["message"]["text"] = "Uživatelský účet se nepodařilo vytvořit!";
+                    $response["message"]["type"] = "ERROR";
+                    $response["errors"] = $this->validator->getFormMessages();
+
+                    echo json_encode($response);
+                    exit;
+                }
+            }
+            $userName = $this->userManager->getUser($userId, "user_name")["user_name"];
+            if (isset($_POST["ajax"])) {
+                $response["message"]["text"] = "Uživatel $userName byl vytvořen!";
+                $response["message"]["type"] = "SUCCESS";
+                $response["data"] = array("user_name" => $userName, "password" => "", "password_again" => "");
+                $response["errors"] = array();
+                echo json_encode($response);
+                exit;
+            }
+            $this->addMessage("Utivatel $userName byl vytvořen!", TypeOfMessage::SUCCESS);
+            $this->redirect("profile/" . $this->person["personsId"]);
+            //Došlo li k chybě
+        } else {
+            //Pokud je tento controler načítán ajaxem.
+            if (isset($_POST["ajax"])) {
+                $response["message"]["text"] = "Účet se nepodařilo vytvořit!";
+                $response["message"]["type"] = "ERROR";
+                $response["errors"] = $this->validator->getFormMessages();
+                echo json_encode($response);
+                exit;
+            }
+            //Nastavíme zprávu.
+            $this->addMessage("Heslo se nepodařilo změnit!", TypeOfMessage::SUCCESS);
+            //Přesměrujem.
+            $this->redirect("profile/" . $this->person["personsId"]);
+            //předáme šabloně zprávy o chybných formulářových polích;
+            $this->data["form_messages"] = $this->validator->getFormMessages();
+        }
+    }
 
     /** vrátí všechna data */
     public function getAllclientData($personId): array
@@ -484,9 +654,12 @@ class ProfileController extends Controller
             $areaCode = $this->areaCodeManager->getAreaCode($contact["area_code"], "*");
             $address = $this->addressManager->getAddress($person["address"], "*");
             $state = $this->stateManager->getState($address["state"]);
-            $user = $this->userManager->getUser($person["user"], "*");
-            if(!$user){
-                $user=array("user_name"=>"Klient nemá účet.");
+            //Pokud má uživatel účet zjistíme uživatelská data.
+            if ($person["user"]) {
+                $user = $this->userManager->getUser($person["user"], "*");
+                //Když účet nemá uložíme tuto informaci do proměnné $user.
+            } else {
+                $user = array("user_name" => "");
             }
             $address["ZIP"] = Formater::formatZIP($address["ZIP"]);
             $contact["phone"] = Formater::formatPhoneNumber($contact["phone"]);

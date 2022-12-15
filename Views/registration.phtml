@@ -6,7 +6,7 @@
         <input type="hidden" name="person_id" id="person_id" value="<?= $_POST["person_id"] ?>">
 
         <div class="form-floating col-md-6 col-12">
-            <input type="text" name="first_name" id="first_name" class="form-control is-<?= $form_messages["first_name"]["type"] ?>" placeholder="křestní jméno:" value="<?= $_POST["first_name"] ?>">
+            <input type="text" name="first_name" id="first_name" class="form-control is-<?= $form_messages["first_name"]["type"] ?>" autofocus placeholder="křestní jméno:" value="<?= $_POST["first_name"] ?>">
             <label for="first_name" class="form-label">Křestní jméno:</label>
             <div class="<?= $form_messages["first_name"]["type"] ?>-feedback">
                 <?= $form_messages["first_name"]["text"] ?>

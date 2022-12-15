@@ -144,7 +144,7 @@ class personManager
                     FROM persons;
                 ');
         } catch (Exception $error) {
-            throw new UserException('Došlo k chybě databáze.', 171);
+            throw new UserException('Došlo k chybě databáze.', 40501);
         }
         return $count;
     }
@@ -166,7 +166,7 @@ class personManager
                 LIMIT ?, ?;
             ', array($from, $limit), PDO::FETCH_ASSOC);
         } catch (Exception $error) {
-            throw new UserException('Došlo k chybě databáze.', 171);
+            throw new UserException('Došlo k chybě databáze.', 40601);
         }
         
         return $users;
@@ -183,7 +183,7 @@ class personManager
                 array($from, $limit)
             );
         } catch (Exception $error) {
-            throw new UserException('Došlo k chybě databáze.', 171);
+            throw new UserException('Došlo k chybě databáze.', 40701);
         }
         return $users;
     }
@@ -204,22 +204,23 @@ class personManager
                 array($id)
             );
         } catch (Exception $error) {
-            throw new UserException('Došlo k chybě databáze.', 171);
+            throw new UserException('Došlo k chybě databáze.', 40801);
         }
         return $users;
     }
 
-    public function getPerson(int $id, ...$columns) : bool|array
+    public function getPerson(int $id, ...$columns) : ?array
     {
         $columns=implode(", ", $columns);
         try {
-            $users = Mysql::oneRow('SELECT '.$columns.' FROM persons 
+            $person = Mysql::oneRow('SELECT '.$columns.' FROM persons 
                 WHERE persons_id = ?;',
                 array($id), PDO::FETCH_ASSOC
             );
         } catch (Exception $error) {
-            throw new UserException('Došlo k chybě databáze.', 171);
+            throw new UserException('Došlo k chybě databáze.', 40901);
         }
-        return $users;
+        
+        return (empty($person)) ? null : $person;
     }
 }

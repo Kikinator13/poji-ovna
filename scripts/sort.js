@@ -8,7 +8,8 @@ window.onload = function () {
     allTh.pop();
     //Hlavičkovým buňkám nastavíme řadící funkci order jako událost
     for (let i = 0; i < allTh.length; i++) {
-        allTh[i].style.cursor = "pointer";
+        allTh[i].style.cursor = "pointer"; //Řadící hlavičky budou mít ručičkový kurzor.
+        allTh[i].style.cursor = "hand"; //pro ie
         
         
         allTh[i].onmousedown = order;

@@ -31,7 +31,7 @@
             {
                 //Pokud uživatel již existuje...
                 if($error->getCode() == 23000){
-                    $validator->addFormMessage("user", "Uživatel s tímto jménem již existuje!", TypeOfFormMessage::INVALID);
+                    $validator->addFormMessage("user_name", "Uživatel s tímto jménem již existuje!", TypeOfFormMessage::INVALID);
                     throw new UserException('Uživatel s tímto jménem je již zaregistrovaný!', 20103, $error);
                 //Pokud dojde k jiné chybě...    
                 }else{    
@@ -94,36 +94,36 @@
          * @param array $user pole údajů o uživateli;
          * @return array $user pole upravené pro vložení do databáze. 
          */
-        public function userValidation(Validator $validator, bool $update = false) : bool | array
+        public function userValidation(Validator $validator, bool $update = false) : ?array
         {   
             //Proměnná ukazuje je li vše ok.
             $ok = true;
             //Zvalidujeme uživatelské jméno a uložíme do pole.
             $user["user_name"] = $validator->userNameValidation(); 
-            //Pokud se nejedná o update uživatele, kde je heslo prázdné(nechceme ho měnit).
+            //Pokud se nejedná o update uživatele, kde je možné nechat heslo prázdné pokud ho nechceme měnit.
             if(!($update && $_POST["password"] == "")){
                 $user["password"] = $validator->passwordValidation();
                 $validator->passwordAgainValidation($user["password"]);
+                //Pokud heslo prošlo validací.
+                if($user["password"]){
                 //Zahashujeme heslo
-                
-                $user["password"] = $this->getHash($user["password"]);
+                    $user["password"] = $this->getHash($user["password"]);
+                }
             }else{
                 $validator->addFormMessage("password", "", TypeOfFormMessage::EMPTY);
                 $validator->addFormMessage("password_again", "", TypeOfFormMessage::EMPTY);
             }
             
-            //Ciklus projde pole uživatel a pokud narazí na false(tedy chybně zvalidováno) vrátí false; 
+            //Ciklus projde pole uživatel a pokud narazí na null(tedy chybně zvalidováno) vrátí null; 
             foreach($user as $passed)
             {
                 if (!$passed){
-                    return false;
+                    return null;
                 }
             }
     
             //Vrátíme pole zvalidovaných dat.
-            return $user;  
-            
-            
+            return $user;           
         }
 
         /**
@@ -159,6 +159,7 @@
 
         /**
          * Vrátí aktuálně přihlášeného uživatele
+         * @return array
          */
         public function getLoggedUser() : ?array
         {
@@ -166,14 +167,21 @@
                 return $_SESSION['user'];
             return null;
         }
-
-        public function getUser($id, ...$columns ){ 
+        /** Funkce vrací uživatele podle jeho id nebo null pokud neexistuje.
+         * @param int id uživatele
+         * @param ...sloupce které chceme vrátit
+         * @return ?array pole jednotlivých sloupců tabulky uživatele. 
+         */
+        public function getUser(int $id, ...$columns ) : ?array{ 
             $columns=implode(", ", $columns);
-            return Mysql::oneRow(
+             
+            $user=Mysql::oneRow(
                 "SELECT ".$columns." FROM users 
-            WHERE users_id = ?", 
-            array($id),
-            PDO::FETCH_ASSOC
-        );
+                WHERE users_id = ?", 
+                array($id),
+                PDO::FETCH_ASSOC
+            );
+            //Pokud žádný uživatel nebyl nalezen vrátíme null jinak vrátíme uživatele.
+            return (empty($user)) ? null : $user;
         }
     }

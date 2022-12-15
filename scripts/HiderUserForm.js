@@ -8,6 +8,10 @@ checkbox.onchange=function(){
         userForm.style.display="none";
     }
     
+    if(checkbox.checked==false){
+        alert("VAROVÁNÍ: Pokud tento přepínač nebude při odeslání zaškrtnutý, Bude účet smazán!");
+    }
+    
 }
 window.onload=function(){
     if(checkbox.checked){
