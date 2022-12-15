@@ -51,7 +51,7 @@ function change(origin, form) {
   XHR.onreadystatechange = function () {
     if (XHR.readyState == 4 && XHR.status == 200) {
       let datatext = XHR.responseText;
-      alert(datatext);
+      
 
       let data = eval("(" + XHR.responseText + ")");
       //Pokud byla operace úspěšná a dostali jsme tak zprávu o úspěchu
@@ -60,7 +60,7 @@ function change(origin, form) {
         //Připravíme si pole na inputy.
         let inputs = [];
         //Projdem nová data a nahradíme nimi na stránce ta stará.
-        alert(data.data.user_name + " " + data.data.password);
+        
         for (inputId in data.data) {
           spanElement = document.getElementById(inputId + "-span");
           let input = document.getElementById(inputId)
