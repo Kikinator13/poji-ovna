@@ -21,77 +21,32 @@ class RegisterController extends Controller
         $this->validator = new Validator();
         if ($_POST) //Pokud byl formulář již odeslán
         {
-            //Připravíme si zvalidovaná data.
-            //Pokud registrujeme nového uživatele.
-            if (empty($_POST["person_id"])) {
-                //Při nastavení formType na Registrace bude ve formuláři captcha a souhlas s podmínkama.
-                $this->data["formType"] = "Registrace";
-                $captcha = $this->validator->captchaValidation();
-                $agreement = $this->validator->agreementValidation();
-                //Pokud chce uživatel vytvořit i účet
-                if (isset($_POST["want_account"])) {
-                    $user = $this->userManager->userValidation($this->validator);
-                } else {
-                    $user = true;
-                }
-                //Pokud updatujeme uživatele.
-            } else {
-                //Na updatovacím formuláři nebude captcha a zaškrtávadlo souhlasu s podmínkami.
-                $this->data["formType"] = "Editace osoby";
-                //Captch a asouhlas nastavýme na true aby prošli kontrolou. 
-                //Ve formuláři je totiž mít ebudeme protože update provádí jedině přihlášený admin.
-                $captcha = true;
-                $agreement = true;
-                //Pokud je zaškrtnuto že chceme něco dělat z uživatelským účtem.
-                if (isset($_POST["want_account"])) {
-                    //Zjistíme jestli uživatel existuje. Buď dostaneme jeho číslo nebo null.
-                    $person=$this->personManager->getPerson($_POST["person_id"], "user");
-                    //Pokud editovaná osoba již má účet nemusí být vyplněno heslo (Nemusí ho chtít měnit. To zajití druhý parametr nastavený na true).
-                    if($person["user"]){
-                        //Díky druhému parametru bude funkce ignorovat, když je prázdné heslo, protože ho měnit nechceme.
-                        $user = $this->userManager->userValidation($this->validator, true);
-                    //Pokud uživatel neexistuje.
-                    } else {
-                        //Zvalidujeme i s heslem(druhý parametr je nastaven defaultně na false).
-                        $user = $this->userManager->userValidation($this->validator);
-                    }
-                //Pokud s uživatelským účtem nic dělat nechceme.
-                }else{
-                    //Nastavíme $user na true aby prošel kontrolou poté ho musíme změnit na false.
-                    $user=true;
-                }
-            }
-            $contact = $this->contactManager->contactValidation($this->validator);
-            $address = $this->addressManager->addressValidation($this->validator);
-            $person = $this->personManager->personValidation($this->validator);
-
+            //validace dat
+            $validatedData = $this->validation();
             //Pokud jsou všechna data v pořádku.
-            if ($captcha && $agreement && $user && $address && $person && $contact) {
-                //Pokud z účetem nic neděláme vyčistíme všechny data o uživateli.
-                if (!isset($_POST["want_account"])) {
-                    //$user nastavíme na false a zároveň všechny proměnné zobrazované ve formuláři vyprázdníme.
-                    $user = $this->userClear();
-                }
-
+            if ($validatedData) {
+                
+                
                 //Pokud updatujeme.
                 if (!empty($_POST["person_id"])) {
                     $this->data["formType"] = "Editace osoby";
                     //Do pole persons, které připravila funkce personValidation přidáme id.
-
-                    $person = $this->update($user, $address, $person, $contact);
+                    
+                    $person = $this->update($validatedData["user"], $validatedData["address"], $validatedData["person"], $validatedData["contact"]);
 
                     //Pokud registrujeme.
                 } else {
                     $this->data["formType"] = "Registrace";
-                    $this->register($user, $address, $person, $contact);
+                    $this->register($validatedData["user"], $validatedData["address"], $validatedData["person"], $validatedData["contact"]);
                 }
             } else {
+                if(!$_POST["want_account"])
+                    $this->userClear();
                 $this->addMessage("Jedno nebo více polí nejsou vyplněna správně!", TypeOfMessage::ERROR);
             }
 
             $this->data['form_messages'] = $this->validator->getFormMessages();
-            //Pokud formulář nebyl ještě odeslán.
-        } else {
+        } else { //Pokud formulář nebyl ještě odeslán.
             //Pokud v URL není zadaná operace budeme registrovat. Jinak nastavýme operaci dle URL.
             $operation = (empty($parameters[0])) ? "registration" : $parameters[0];
             //Pokud potřebujeme id (updatujeme nebo mažeme, neregistrujeme).
@@ -214,8 +169,14 @@ class RegisterController extends Controller
         $this->redirect("admin");
     }
 
-
-    public function update(array|bool $user, array $address, array $person, $contact): array
+    /** Updatuje data v databázy
+     *  @param array $user(user_name=>, password=>)
+     * @param array $address(street_and_number=>, ZIP=>, city=>, state=>)
+     * @param array $person(first_name, last_name,identity_card_number, National_id_number, date_of_bird, contact, address, user) poslední 3 jsou odkaz na jinou tabulku
+     * @param array $contact(area_code, phone, mail)
+     * @return never funkce vždy stránku přesměruje. 
+     */
+    public function update(array|bool $user, array $address, array $person, $contact) : never
     {
         $this->userVerify(true);
         $userManager = $this->userManager;
@@ -264,6 +225,75 @@ class RegisterController extends Controller
         $this->addmessage("Záznam byl upraven!", TypeOfMessage::SUCCESS);
         $this->redirect("admin");
     }
+    /** Validuje získaná data a v případě úspěchu je vrací v dvourozměrném poli. Při neúspěchu null 
+     * @return ?array
+    */
+    public function validation() : ?array
+    {
+        //Připravíme si zvalidovaná data.
+            //Pokud registrujeme nového uživatele.
+            if (empty($_POST["person_id"])) {
+                //Při nastavení formType na Registrace bude ve formuláři captcha a souhlas s podmínkama.
+                $this->data["formType"] = "Registrace";
+                $captcha = $this->validator->captchaValidation();
+                $agreement = $this->validator->agreementValidation();
+                //Pokud chce uživatel vytvořit i účet
+                if (isset($_POST["want_account"])) {
+                    $user = $this->userManager->userValidation($this->validator);
+                } else {
+                    $user = true;
+                }
+                //Pokud updatujeme uživatele.
+            } else {
+                //Na updatovacím formuláři nebude captcha a zaškrtávadlo souhlasu s podmínkami.
+                $this->data["formType"] = "Editace osoby";
+                //Captch a asouhlas nastavýme na true aby prošli kontrolou. 
+                //Ve formuláři je totiž mít ebudeme protože update provádí jedině přihlášený admin.
+                $captcha = true;
+                $agreement = true;
+                //Pokud je zaškrtnuto že chceme něco dělat z uživatelským účtem.
+                if (isset($_POST["want_account"])) {
+                    //Zjistíme jestli uživatel existuje. Buď dostaneme jeho číslo nebo null.
+                    $person=$this->personManager->getPerson($_POST["person_id"], "user");
+                    //Pokud editovaná osoba již má účet nemusí být vyplněno heslo (Nemusí ho chtít měnit. To zajití druhý parametr nastavený na true).
+                    if($person["user"]){
+                        //Díky druhému parametru bude funkce ignorovat, když je prázdné heslo, protože ho měnit nechceme.
+                        $user = $this->userManager->userValidation($this->validator, true);
+                    //Pokud uživatel neexistuje.
+                    } else {
+                        //Zvalidujeme i s heslem(druhý parametr je nastaven defaultně na false).
+                        $user = $this->userManager->userValidation($this->validator);
+                    }
+                    //Pokud s uživatelským účtem nic dělat nechceme.
+                }else{
+                    //Nastavíme $user na true aby prošel kontrolou poté ho musíme změnit na false.
+                    $user=true;
+                }
+            }
+            $contact = $this->contactManager->contactValidation($this->validator);
+            $address = $this->addressManager->addressValidation($this->validator);
+            $person = $this->personManager->personValidation($this->validator);
+
+            if ($captcha && $agreement && $user && $address && $person && $contact) {
+                //Pokud z účetem nic neděláme(nemáme zapnutý přepínač want_account) vyčistíme všechny data o uživateli.
+                if (!isset($_POST["want_account"])) {
+                    //$user nastavíme na false a zároveň všechny proměnné zobrazované ve formuláři vyprázdníme.
+                    $user = $this->userClear();
+                }
+                return array(
+                    "user" => $user,
+                    "address" => $address,
+                    "person" => $person,
+                    "contact" => $contact
+                );
+            }else{
+                return null;
+            }
+    }
+    /** Připravý formulář na základě toho jestli chceme updatovat nebo registrovat. Pokud chcem mazat rovnou zavolá funkci $shis->delete(). 
+     *  @param string operace ("delete"|"update"|"registration")
+     *  @param int id uživatele kterého chceme updatovat nebo smazat. při registraci nevyplňujeme.
+    */
     public function prepareForm(string $operation, ?int $id = null): void
     {
         switch ($operation) {
@@ -377,8 +407,12 @@ class RegisterController extends Controller
         $_POST["captcha"] = "";
         $_POST["agreement"] = false;
     }
-
-    public function userClear(): bool
+    /** Nastavý posty u uživatelského účtu na prázdné řetězce aby nedocházelo k chybám, když tam žádné informace nejsou.
+     *  ze stejného důvodu nastavý také chybové zprávy na prázdný řetězec s konstantou prázdné zprávy aby se pole nezobrazovala
+     *  zeleně ani červeně. funkce vrací vždy f 
+     *  @return bool false vrací vždy. 
+     */
+    public function userClear() : bool
     {
         $_POST["user_name"] = "";
         $_POST["password"] = "";
